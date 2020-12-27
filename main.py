@@ -1,14 +1,10 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import time
 
 import numpy as np
 import cv2
 from mss import mss
 from PIL import Image
 import keyboard
-from pynput.keyboard import Key, Controller
 
 
 def first_trial():
@@ -19,8 +15,7 @@ def first_trial():
         'width':  1920,
         'height': 1080
     }
-
-    keyboard_simulated = Controller()
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\image2.png'
 
     while True:  # making a loop
         try:  # used try so that if user pressed other than the given key error will not be shown
@@ -29,14 +24,13 @@ def first_trial():
                 print('You Pressed A Key!')
                 screenshot = mss().grab(window)
                 img = Image.frombytes("RGB", (screenshot.width, screenshot.height), screenshot.rgb)
+                img.save(path)
                 img_array = np.array(img)
-
-                keyboard_simulated.press("a")
-                keyboard_simulated.press("b")
-
-                keyboard_simulated.release("a")
-                keyboard_simulated.release("b")
-
+                keyboard.press('d')
+                time.sleep(1)
+                keyboard.release('d')
+                keyboard.press('m')
+                keyboard.release('m')
                 break  # finishing the loop
         except:
             break  # if user pressed a key other than the given key the loop will break
