@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CAPTURING/image_processing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LINE_DETECTION/Hough_transform.py" afterDir="false" />
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="find_edge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +134,14 @@
       <option name="presentableId" value="Default" />
       <updated>1608591035555</updated>
     </task>
+    <task id="LOCAL-00001" summary="find_edge">
+      <created>1609107360823</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1609107360823</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,6 +155,10 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="find_edge" />
+    <option name="LAST_COMMIT_MESSAGE" value="find_edge" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -196,8 +205,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py</url>
-          <line>6</line>
-          <option name="timeStamp" value="21" />
+          <line>59</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
