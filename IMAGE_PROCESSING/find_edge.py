@@ -4,60 +4,88 @@ import cv2
 import imutils
 import numpy as np
 from PIL import Image
-from math import sin, cos, pi
+from math import sin, cos, pi, radians
+
+from matplotlib import pyplot as plt
 
 
 def find_edge(image):
+    st = time.time()
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    x_a = 400
-    y_a = 40
-    length = 120
-    distance = 60
-    alpha = 300
+    x_a = 390
+    y_a = 70
+    length = 100
+    distance = 100
+    alpha = 305
 
     line_1 = Line(x1=x_a, y1=y_a, alpha=alpha, length=length)
     line_2 = Line(x1=x_a, y1=y_a, alpha=alpha + 90, length=distance)
     image_with_lines = draw_lines(image, [line_1, line_2])
+    # cv2.imshow("image_with_lines", image_with_lines)
+    # cv2.waitKey(0)
     rectangle = Rectangle(line_1, line_2)
 
+    image_cropped_with_lines = image_with_lines[rectangle.y_min: rectangle.y_max, rectangle.x_min: rectangle.x_max]
+    image_cropped = image[rectangle.y_min: rectangle.y_max, rectangle.x_min: rectangle.x_max]
 
-    image_cropped = image_with_lines[rectangle.y_min: rectangle.y_max, rectangle.x_min: rectangle.x_max]
-    cv2.imshow("image_cropped", image_cropped)
-    cv2.waitKey(0)
+    # cv2.imshow("image_cropped", image_cropped)
+    # cv2.waitKey(0)
 
-    image_rotated = rotate_image(image_cropped, 270 - alpha, length, distance)
+    alpha_range = 10
+    diffs_sum = np.zeros((alpha_range, distance - 1))
+    for beta in range(0, alpha_range):
+        diffs_sum[beta, :] = find_step_value(image_cropped, alpha - alpha_range/2 + beta, length, distance)
 
-    pass
+    min_step = np.min(diffs_sum)
+    min_index = np.where(diffs_sum == min_step)
+    degree = alpha - alpha_range/2 + min_index[0]
+    dist = min_index[1] + 1
+
+    x_e = x_a - int(dist * sin(radians(degree)))
+    y_e = y_a - int(dist * cos(radians(degree)))
+    edge = Line(x1=x_e, y1=y_e, alpha=degree, length=length)
+    image_with_edge = draw_lines(image_with_lines, [edge])
+    # cv2.imshow("edge", image_with_edge)
+    # cv2.waitKey(0)
+    print(time.time() - st)
+    return dist, degree
+
+
+def find_step_value(image, alpha, length, distance):
+    image_rotated = rotate_image(image, 270 - alpha, length, distance)
+
+    # if alpha == 307:
+    #     x_e = 27
+    #     y_e = 0
+    #     edge = Line(x1=x_e, y1=y_e, alpha=270, length=length)
+    #     image_with_edge = draw_lines(image_rotated, [edge])
+    #     cv2.imshow("edge", image_with_edge)
+    #     cv2.waitKey(0)
+
+    # diffs = np.diff(image_rotated, prepend=np.ndarray((image_rotated.shape[0], 1), image_rotated[:, 0]))
+    diffs = np.diff(image_rotated)  #, prepend=np.expand_dims(image_rotated[:, 0], axis=1)) # todo add 1 in further calculations
+
+    diffs_normalized = (diffs + 255) // 2
+    # cv2.imshow("diffs", diffs_normalized)
+    # cv2.waitKey(0)
+
+    diffs_sum = np.sum(diffs, axis=0)
+    # plt.plot(diffs_sum)
+    # plt.ylabel('diffs')
+    # plt.show()
+
+    # diff_min = np.amin(diffs_sum)
+
+    return diffs_sum
 
 
 def rotate_image(image, angle, result_width, result_height):
-    st = time.time()
-    image_center = tuple(np.array(image.shape[1::-1]) / 2)
-    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
-    result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
-    print(time.time() - st)
-    cv2.imshow("image_rotated_cv2", result)
-    cv2.waitKey(0)
-
-    st = time.time()
-    rotated_bound = imutils.rotate_bound(image, -angle)
-    print(time.time() - st)
-    cv2.imshow("image_rotated_bound", rotated_bound)
-    cv2.waitKey(0)
-
-    st = time.time()
     rotated = imutils.rotate(image, angle)
-    print(time.time() - st)
-    cv2.imshow("image_rotated", rotated)
-    cv2.waitKey(0)
-
-    st = time.time()
     cropped = crop(rotated, result_width, result_height)
-    print(time.time() - st)
-    cv2.imshow("image_rotated_and_cropped", cropped)
-    cv2.waitKey(0)
+    # cv2.imshow("image_rotated_and_cropped", cropped)
+    # cv2.waitKey(0)
 
-    return result
+    return cropped
 
 
 def crop(image, result_width, result_height):
@@ -70,21 +98,13 @@ def crop(image, result_width, result_height):
     return image_cropped
 
 
-# def draw_line(image_referential, x1, y1, alpha, length):
-#     line_image = np.copy(image_referential) * 0  # creating a blank to draw lines on
-#     cv2.line(line_image, (x1, y1), (x2, y2), (255, 0, 0), 2)
-#     lines_edges_skl = cv2.addWeighted(image_referential, 0.8, line_image, 1, 0)
-#     cv2.imshow("edges_skl", lines_edges_skl)
-#     cv2.waitKey(0)
-
-
 def draw_lines(image_referential, lines):
     line_image = np.copy(image_referential) * 0  # creating a blank to draw lines on
     for line in lines:
         cv2.line(line_image, (line.x1, line.y1), (line.x2, line.y2), (255, 0, 0), 2)
     lines_edges_skl = cv2.addWeighted(image_referential, 0.8, line_image, 1, 0)
-    cv2.imshow("edges_skl", lines_edges_skl)
-    cv2.waitKey(0)
+    # cv2.imshow("edges_skl", lines_edges_skl)
+    # cv2.waitKey(0)
     return lines_edges_skl
 
 
