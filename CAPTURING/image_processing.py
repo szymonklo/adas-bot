@@ -8,6 +8,12 @@ from PIL import Image
 import keyboard
 
 
+def process_image(image):
+    processed_image_1 = Image.frombytes("RGB", (image.width, image.height), image.rgb)
+    processed_image_2 = np.array(processed_image_1)
+    processed_image = cv2.cvtColor(np.array(processed_image_2), cv2.COLOR_RGB2BGR)
+    return processed_image
+
 def image_processing():
     start_time = time.time()
     window = {

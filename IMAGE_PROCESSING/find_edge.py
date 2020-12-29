@@ -1,3 +1,4 @@
+import datetime
 import time
 
 import cv2
@@ -9,13 +10,13 @@ from math import sin, cos, pi, radians
 from matplotlib import pyplot as plt
 
 
-def find_edge(image):
+def find_edge(image, save=False):
     st = time.time()
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    x_a = 390
-    y_a = 70
-    length = 100
-    distance = 100
+    x_a = 350
+    y_a = 90
+    length = 60
+    distance = 120
     alpha = 305
 
     line_1 = Line(x1=x_a, y1=y_a, alpha=alpha, length=length)
@@ -36,18 +37,25 @@ def find_edge(image):
     for beta in range(0, alpha_range):
         diffs_sum[beta, :] = find_step_value(image_cropped, alpha - alpha_range/2 + beta, length, distance)
 
-    min_step = np.min(diffs_sum)
+    min_step = np.amin(diffs_sum)
     min_index = np.where(diffs_sum == min_step)
-    degree = alpha - alpha_range/2 + min_index[0]
-    dist = min_index[1] + 1
+    degree = alpha - alpha_range/2 + min_index[0][0]
+    dist = min_index[1][0] + 1
 
     x_e = x_a - int(dist * sin(radians(degree)))
     y_e = y_a - int(dist * cos(radians(degree)))
     edge = Line(x1=x_e, y1=y_e, alpha=degree, length=length)
     image_with_edge = draw_lines(image_with_lines, [edge])
+    edge_cropped = Line(x1=x_e-x_a, y1=y_e-y_a, alpha=degree, length=length)
+    image_with_edge_cropped = draw_lines(image_cropped_with_lines, [edge])
+
     # cv2.imshow("edge", image_with_edge)
     # cv2.waitKey(0)
     print(time.time() - st)
+    if save:
+        path = r'C:\PROGRAMOWANIE\auto_data\photos\image'
+        path = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_dist_' + str(dist) + '.png'
+        Image.fromarray(image_with_edge).save(path)
     return dist, degree
 
 
