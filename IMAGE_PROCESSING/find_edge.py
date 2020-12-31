@@ -1,4 +1,5 @@
 import datetime
+import os
 import time
 
 import cv2
@@ -10,14 +11,33 @@ from math import sin, cos, pi, radians
 from matplotlib import pyplot as plt
 
 
+def find_vertical_edge(raw, processed):
+    linear = np.mean(processed, axis=0, dtype=int)
+
+    diffs = np.diff(linear, prepend=linear[0])
+
+    max = np.amax(diffs[650:])
+    argmax = np.argmax(diffs[650:])
+
+    return argmax, max
+
+    # fig, axs = plt.subplots(4,1)
+    # plt.subplot(411), plt.imshow(raw, cmap='gray'), plt.title('Raw')
+    # plt.subplot(412), plt.imshow(processed, cmap='gray'), plt.title('Processed')
+    # axs[2].plot(linear)
+    # axs[2].set_xlim(0, len(linear))
+    # axs[3].plot(diffs)
+    # axs[3].set_xlim(0, len(diffs))
+    # plt.show()
+
 def find_edge(image, save=False):
-    st = time.time()
+    # st = time.time()
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    x_a = 350
-    y_a = 90
+    x_a = 390
+    y_a = 110
     length = 60
-    distance = 120
-    alpha = 305
+    distance = 160
+    alpha = 310
 
     line_1 = Line(x1=x_a, y1=y_a, alpha=alpha, length=length)
     line_2 = Line(x1=x_a, y1=y_a, alpha=alpha + 90, length=distance)
@@ -32,7 +52,7 @@ def find_edge(image, save=False):
     # cv2.imshow("image_cropped", image_cropped)
     # cv2.waitKey(0)
 
-    alpha_range = 10
+    alpha_range = 20
     diffs_sum = np.zeros((alpha_range, distance - 1))
     for beta in range(0, alpha_range):
         diffs_sum[beta, :] = find_step_value(image_cropped, alpha - alpha_range/2 + beta, length, distance)
@@ -40,7 +60,7 @@ def find_edge(image, save=False):
     min_step = np.amin(diffs_sum)
     min_index = np.where(diffs_sum == min_step)
     degree = alpha - alpha_range/2 + min_index[0][0]
-    dist = min_index[1][0] + 1
+    dist = int(min_index[1][0] + 1)
 
     x_e = x_a - int(dist * sin(radians(degree)))
     y_e = y_a - int(dist * cos(radians(degree)))
@@ -51,11 +71,15 @@ def find_edge(image, save=False):
 
     # cv2.imshow("edge", image_with_edge)
     # cv2.waitKey(0)
-    print(time.time() - st)
+    # print(time.time() - st)
     if save:
         path = r'C:\PROGRAMOWANIE\auto_data\photos\image'
-        path = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_dist_' + str(dist) + '.png'
-        Image.fromarray(image_with_edge).save(path)
+        path_dist = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_min_' + str(int(min_step)) + '_dist_' + str(dist) + '.png'
+        Image.fromarray(image_with_edge).save(path_dist)
+        path_raw = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_raw' + '.png'
+        Image.fromarray(image).save(path_raw)
+    # debug
+    find_step_value(image_cropped, degree, length, distance)
     return dist, degree
 
 
@@ -149,6 +173,15 @@ class Rectangle:
 
 
 if __name__ == '__main__':
-    path = r'C:\PROGRAMOWANIE\auto_data\photos\image3.png'
-    image = cv2.imread(path)
-    find_edge(image)
+    # path = r'C:\PROGRAMOWANIE\auto_data\photos\image3.png'
+    # image = cv2.imread(path)
+    # find_edge(image)
+    path = r'C:\PROGRAMOWANIE\auto_data\photos'
+    dists = []
+    for path, subdir, files in os.walk(path):
+        for file in files:
+            if 'raw' in file:
+                image = cv2.imread(os.path.join(path, file))
+                dist, deg = find_edge(image)
+                dists.append(dist)
+    pass

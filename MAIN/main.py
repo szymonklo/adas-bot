@@ -4,52 +4,68 @@ import pandas as pd
 
 from CAPTURING.capture_image import capture_image
 from CAPTURING.image_processing import process_image
-from CONFIG.config import window, window_lc
-from IMAGE_PROCESSING.find_edge import find_edge
+from CONFIG.config import window, window_lc, window_crop_margin
+from IMAGE_PROCESSING.find_edge import find_edge, find_vertical_edge
+from IMAGE_PROCESSING.perspective import perspective
 from LC.lane_centering import apply_correction
 
 
 def run():
+    assist_active = False
+    ts = time.time()
     while True:
         # try:  # used try so that if user pressed other than the given key error will not be shown
         if keyboard.is_pressed('q'):  # if key 'q' is pressed
             keyboard.press('c')     # constant speed
             keyboard.release('c')
-            activate_assist(seconds=1)
+            assist_active = True
+            while assist_active:
+                tn = time.time()
+                if keyboard.is_pressed('z'):
+                    assist_active = False
+                    break
+                if not keyboard.is_pressed('z') and assist_active:
+                    if tn-ts > 1:
+                        activate_assist(num=100)
+                        ts = time.time()
+
             # break
         # except:
         #     pass
 
 
-def activate_assist(seconds=1):
+def activate_assist(num=1):
     distance = []
     degrees = []
     columns = [
         'distance',
-        'degrees',
+        'max_diff',
         'direction',
         'time_s',
         'operation_time',
     ]
     df = pd.DataFrame(columns=columns)
-    for i in range(seconds):
+    for i in range(num):
         start_time = time.time()
-        captured_image = capture_image(window_lc)
+        captured_image = capture_image(window_crop_margin)
         processed_image = process_image(captured_image)
-        dist, degree = find_edge(processed_image, save=True)
+        perspective_image = perspective(processed_image)
+        # dist, degree = find_edge(processed_image, save=True)
         # distance.append(dist)
         # degrees.append(degree)
         # df.at[i, 'distance'] = dist
 
-        direction, time_s = apply_correction(dist, simulate=False)
+        dist, max_diff = find_vertical_edge(processed_image, perspective_image)
+
+        direction, time_s = apply_correction(dist, max_diff, simulate=True)
         operation_time = time.time() - start_time
 
-        row = [dist, degree, direction, time_s, operation_time]
+        row = [dist, max_diff, direction, time_s, operation_time]
         row_df = pd.DataFrame([row], columns=columns)
         df = df.append(row_df)
 
-        if operation_time < 1:
-            time.sleep(1 - operation_time)
+        # if operation_time < 1:
+        #     time.sleep(1 - operation_time)
     pass
 
 

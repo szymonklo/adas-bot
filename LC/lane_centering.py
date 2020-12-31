@@ -1,17 +1,17 @@
 import time
 import keyboard
 
-from CONFIG.config import target_distance, keys
+from CONFIG.config import target_distance, keys, tolerance, min_diff
 
 
-def apply_correction(distance, simulate=False):
+def apply_correction(distance, max_diff, simulate=False):
     deviation = distance - target_distance
-    time_s = abs(deviation / 200)
+    time_s = max(abs(deviation / 5000), 0.1)
     if deviation > 0:
         direction = 'right'
     else:
         direction = 'left'
-    if not simulate:
+    if not simulate and abs(deviation) > tolerance and max_diff > min_diff:
         time_s = steer(direction, time_s)
     return direction, time_s
 
