@@ -11,7 +11,7 @@ import keyboard
 def process_image(image):
     processed_image_1 = Image.frombytes("RGB", (image.width, image.height), image.rgb)
     processed_image_2 = np.array(processed_image_1)
-    processed_image = cv2.cvtColor(np.array(processed_image_2), cv2.COLOR_RGB2BGR)
+    processed_image = cv2.cvtColor(np.array(processed_image_2), cv2.COLOR_RGB2GRAY)
     return processed_image
 
 def image_processing():
@@ -78,8 +78,8 @@ def find_line(image_gray, image_referential):
     x2, y2 = 385, 140
     cv2.line(line_image, (x1, y1), (x2, y2), (255, 0, 0), 5)
     lines_edges_skl = cv2.addWeighted(image_referential, 0.8, line_image, 1, 0)
-    cv2.imshow("edges_skl", lines_edges_skl)
-    cv2.waitKey(0)
+    # cv2.imshow("edges_skl", lines_edges_skl)
+    # cv2.waitKey(0)
 
 
 def auto_canny(image, sigma=0.33):
@@ -141,8 +141,8 @@ def hough(image_gray, image_referential):
     #             lines_edges[int(b) + i, int(a) + j] = [0, 255, 0]
 
 
-    cv2.imshow("edges", lines_edges)
-    cv2.waitKey(0)
+    # cv2.imshow("edges", lines_edges)
+    # cv2.waitKey(0)
 
 
 if __name__ == '__main__':

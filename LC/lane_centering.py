@@ -4,14 +4,14 @@ import keyboard
 from CONFIG.config import target_distance, keys, tolerance, min_diff
 
 
-def apply_correction(distance, max_diff, simulate=False):
+def apply_correction(distance, simulate=False):
     deviation = distance - target_distance
-    time_s = max(abs(deviation / 5000), 0.1)
+    time_s = min(abs(deviation / 1000), 0.1)
     if deviation > 0:
         direction = 'right'
     else:
         direction = 'left'
-    if not simulate and abs(deviation) > tolerance and max_diff > min_diff:
+    if not simulate and abs(deviation) > tolerance:
         time_s = steer(direction, time_s)
     return direction, time_s
 

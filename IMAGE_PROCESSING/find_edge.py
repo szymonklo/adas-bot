@@ -11,7 +11,7 @@ from math import sin, cos, pi, radians
 from matplotlib import pyplot as plt
 
 
-def find_vertical_edge(raw, processed):
+def find_vertical_edge(processed, raw):
     linear = np.mean(processed, axis=0, dtype=int)
 
     diffs = np.diff(linear, prepend=linear[0])
@@ -19,28 +19,35 @@ def find_vertical_edge(raw, processed):
     max = np.amax(diffs[650:])
     argmax = np.argmax(diffs[650:])
 
+
+    fig, axs = plt.subplots(4,1)
+    plt.subplot(411), plt.imshow(raw, cmap='gray'), plt.title('Raw')
+    plt.subplot(412), plt.imshow(processed, cmap='gray'), plt.title('Processed')
+    axs[2].plot(linear)
+    axs[2].set_xlim(0, len(linear))
+    axs[3].plot(diffs)
+    axs[3].set_xlim(0, len(diffs))
+    # plt.show()
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\image'
+    path_fig = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_max_' + str(
+        int(max)) + '_arg_max_' + str(argmax) + '.png'
+    plt.savefig(path_fig)
+    plt.close()
+
     return argmax, max
 
-    # fig, axs = plt.subplots(4,1)
-    # plt.subplot(411), plt.imshow(raw, cmap='gray'), plt.title('Raw')
-    # plt.subplot(412), plt.imshow(processed, cmap='gray'), plt.title('Processed')
-    # axs[2].plot(linear)
-    # axs[2].set_xlim(0, len(linear))
-    # axs[3].plot(diffs)
-    # axs[3].set_xlim(0, len(diffs))
-    # plt.show()
 
 def find_edge(image, save=False):
     # st = time.time()
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    x_a = 390
-    y_a = 110
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    x_a = 460
+    y_a = 215
     length = 60
-    distance = 160
-    alpha = 310
+    distance = 200
+    alpha = 35
 
-    line_1 = Line(x1=x_a, y1=y_a, alpha=alpha, length=length)
-    line_2 = Line(x1=x_a, y1=y_a, alpha=alpha + 90, length=distance)
+    line_1 = Line(x1=x_a, y1=y_a, alpha=alpha + 90, length=length)
+    line_2 = Line(x1=x_a, y1=y_a, alpha=alpha, length=distance)
     image_with_lines = draw_lines(image, [line_1, line_2])
     # cv2.imshow("image_with_lines", image_with_lines)
     # cv2.waitKey(0)
@@ -52,19 +59,19 @@ def find_edge(image, save=False):
     # cv2.imshow("image_cropped", image_cropped)
     # cv2.waitKey(0)
 
-    alpha_range = 20
+    alpha_range = 30
     diffs_sum = np.zeros((alpha_range, distance - 1))
     for beta in range(0, alpha_range):
         diffs_sum[beta, :] = find_step_value(image_cropped, alpha - alpha_range/2 + beta, length, distance)
 
-    min_step = np.amin(diffs_sum)
-    min_index = np.where(diffs_sum == min_step)
-    degree = alpha - alpha_range/2 + min_index[0][0]
-    dist = int(min_index[1][0] + 1)
+    max_step = np.amax(diffs_sum)
+    max_index = np.where(diffs_sum == max_step)
+    degree = alpha - alpha_range/2 + max_index[0][0]
+    dist = int(max_index[1][0] + 1)
 
-    x_e = x_a - int(dist * sin(radians(degree)))
-    y_e = y_a - int(dist * cos(radians(degree)))
-    edge = Line(x1=x_e, y1=y_e, alpha=degree, length=length)
+    x_e = x_a + int(dist * cos(radians(degree)))
+    y_e = y_a - int(dist * sin(radians(degree)))
+    edge = Line(x1=x_e, y1=y_e, alpha=degree + 90, length=length)
     image_with_edge = draw_lines(image_with_lines, [edge])
     edge_cropped = Line(x1=x_e-x_a, y1=y_e-y_a, alpha=degree, length=length)
     image_with_edge_cropped = draw_lines(image_cropped_with_lines, [edge])
@@ -74,7 +81,7 @@ def find_edge(image, save=False):
     # print(time.time() - st)
     if save:
         path = r'C:\PROGRAMOWANIE\auto_data\photos\image'
-        path_dist = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_min_' + str(int(min_step)) + '_dist_' + str(dist) + '.png'
+        path_dist = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_min_' + str(int(max_step)) + '_dist_' + str(dist) + '.png'
         Image.fromarray(image_with_edge).save(path_dist)
         path_raw = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_raw' + '.png'
         Image.fromarray(image).save(path_raw)
@@ -84,7 +91,7 @@ def find_edge(image, save=False):
 
 
 def find_step_value(image, alpha, length, distance):
-    image_rotated = rotate_image(image, 270 - alpha, length, distance)
+    image_rotated = rotate_image(image, - alpha, length, distance)
 
     # if alpha == 307:
     #     x_e = 27
@@ -95,9 +102,11 @@ def find_step_value(image, alpha, length, distance):
     #     cv2.waitKey(0)
 
     # diffs = np.diff(image_rotated, prepend=np.ndarray((image_rotated.shape[0], 1), image_rotated[:, 0]))
-    diffs = np.diff(image_rotated)  #, prepend=np.expand_dims(image_rotated[:, 0], axis=1)) # todo add 1 in further calculations
+    image_rotated_int = image_rotated.astype(int)
+    diffs = np.diff(image_rotated_int)  #, prepend=np.expand_dims(image_rotated[:, 0], axis=1)) # todo add 1 in further calculations
 
-    diffs_normalized = (diffs + 255) // 2
+    diffs_normalized_int32 = (diffs + 255) // 2
+    diffs_normalized_uint8 = diffs_normalized_int32.astype('uint8')
     # cv2.imshow("diffs", diffs_normalized)
     # cv2.waitKey(0)
 
@@ -112,7 +121,7 @@ def find_step_value(image, alpha, length, distance):
 
 
 def rotate_image(image, angle, result_width, result_height):
-    rotated = imutils.rotate(image, angle)
+    rotated = imutils.rotate_bound(image, -angle)
     cropped = crop(rotated, result_width, result_height)
     # cv2.imshow("image_rotated_and_cropped", cropped)
     # cv2.waitKey(0)
@@ -180,8 +189,9 @@ if __name__ == '__main__':
     dists = []
     for path, subdir, files in os.walk(path):
         for file in files:
-            if 'raw' in file:
+            if 'raw' in file and 'image2021-01-01-01_30_51_raw' in file:
                 image = cv2.imread(os.path.join(path, file))
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                 dist, deg = find_edge(image)
                 dists.append(dist)
     pass

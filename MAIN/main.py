@@ -18,6 +18,7 @@ def run():
         if keyboard.is_pressed('q'):  # if key 'q' is pressed
             keyboard.press('c')     # constant speed
             keyboard.release('c')
+
             assist_active = True
             while assist_active:
                 tn = time.time()
@@ -39,7 +40,7 @@ def activate_assist(num=1):
     degrees = []
     columns = [
         'distance',
-        'max_diff',
+        'degree',
         'direction',
         'time_s',
         'operation_time',
@@ -47,20 +48,21 @@ def activate_assist(num=1):
     df = pd.DataFrame(columns=columns)
     for i in range(num):
         start_time = time.time()
-        captured_image = capture_image(window_crop_margin)
+        captured_image = capture_image(window_lc)
         processed_image = process_image(captured_image)
-        perspective_image = perspective(processed_image)
-        # dist, degree = find_edge(processed_image, save=True)
+        # perspective_image = perspective(processed_image)
+        dist, degree = find_edge(processed_image, save=True)
         # distance.append(dist)
         # degrees.append(degree)
         # df.at[i, 'distance'] = dist
 
-        dist, max_diff = find_vertical_edge(processed_image, perspective_image)
+        # dist, max_diff = find_vertical_edge(perspective_image, processed_image)
 
-        direction, time_s = apply_correction(dist, max_diff, simulate=True)
+        direction, time_s = apply_correction(dist, simulate=False)
+        time.sleep(0.2)
         operation_time = time.time() - start_time
 
-        row = [dist, max_diff, direction, time_s, operation_time]
+        row = [dist, degree, direction, time_s, operation_time]
         row_df = pd.DataFrame([row], columns=columns)
         df = df.append(row_df)
 
