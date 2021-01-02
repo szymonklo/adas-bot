@@ -1,12 +1,15 @@
 import time
+from math import cos, radians
+
 import keyboard
 
-from CONFIG.config import target_distance, keys, tolerance, min_diff
+from CONFIG.config import target_distance, keys, tolerance, min_diff, target_degree
 
 
-def apply_correction(distance, simulate=False):
-    deviation = distance - target_distance
-    time_s = min(abs(deviation / 1000), 0.1)
+def apply_correction(distance, degree, simulate=False):
+    deviation = distance / cos(radians(degree)) - target_distance
+    deviation_deg = 0#target_degree - degree
+    time_s = min(abs(deviation / 500 + deviation_deg / 250), 0.15)
     if deviation > 0:
         direction = 'right'
     else:

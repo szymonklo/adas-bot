@@ -13,8 +13,8 @@ window_lc = {
 }
 
 
-
-target_distance = 70
+target_distance = 100
+target_degree = 42
 tolerance = 10
 min_diff = 6
 
