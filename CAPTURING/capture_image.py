@@ -1,5 +1,3 @@
-import keyboard
-from PIL import Image
 from mss import mss
 
 

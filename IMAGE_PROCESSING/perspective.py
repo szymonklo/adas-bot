@@ -4,7 +4,6 @@ from matplotlib import pyplot as plt
 
 from CONFIG.config import points_before_transform, points_after_transform, x_size, y_size, y_min, y_max, x_min, x_max, \
     x_margin
-from IMAGE_PROCESSING.find_edge import find_vertical_edge
 
 
 def perspective(raw):
@@ -22,17 +21,9 @@ def perspective(raw):
 
     return processed
 
-    # find_vertical_edge(raw, processed)
-
 
 if __name__ == '__main__':
-    # image = cv2.imread(r'C:\PROGRAMOWANIE\auto_data\photos\image001.png')[:, :, 0]
-    # a=np.min(image)
-    # b=np.max(image)
     image = cv2.imread(r'C:\PROGRAMOWANIE\auto_data\photos\image001.png', cv2.IMREAD_GRAYSCALE)
-    # c=np.min(image)
-    # d=np.max(image)
-    image_cropped = image[y_min: y_max,
-                          x_min - x_margin: x_max + x_margin]
+    image_cropped = image[y_min: y_max, x_min - x_margin: x_max + x_margin]
 
     perspective(image_cropped)

@@ -1,22 +1,15 @@
 window = {
-    'left':   0,
-    'top':    0,
-    'width':  1920,
-    'height': 1080
-}
-
-window_lc = {
     'left':   600,
     'top':    400,
-    'width':  680,
+    'width':  980,
     'height': 220,
 }
 
+min_diff = 800
 
-target_distance = 100
-target_degree = 42
+target_distance = 600
+target_degree = 66
 tolerance = 10
-min_diff = 6
 
 keys = {
     'left': 'a',
@@ -24,30 +17,12 @@ keys = {
 }
 
 x_margin = 200
-# x_min = 620
-# x_max = 1211
-# y_min = 410
-# y_max = 550
 x_min = 620
 x_max = 1211
 y_min = 410
 y_max = 550
 x_size = x_max - x_min
 y_size = y_max - y_min
-
-# points_before_transform = [
-#     [x_margin, y_size],
-#     [535, 0],
-#     [643, 0],
-#     [791, y_size],
-# ]
-
-# points_after_transform = [
-#     [x_margin, y_size],
-#     [535, 0],
-#     [643, 0],
-#     [791, y_size],
-# ]
 
 points_before_transform = [
     [172, y_size],
@@ -69,4 +44,3 @@ window_crop_margin = {
     'width': x_size + 2*x_margin,
     'height': y_size,
 }
-
