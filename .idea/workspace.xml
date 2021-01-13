@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="rows translations">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="refactored">
+      <change afterPath="$PROJECT_DIR$/CC/cruise_control.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/OCR/ocr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CAPTURING/capture_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/CAPTURING/capture_image.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CAPTURING/image_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/CAPTURING/image_processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CAPTURING/capture_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/CAPTURING/capture_image.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CAPTURING/image_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LC/lane_centering.py" beforeDir="false" afterPath="$PROJECT_DIR$/LC/lane_centering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LINE_DETECTION/Hough_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/Hough_transform.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +41,12 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING" />
+      <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING\LINE_DETECTION" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="Hough_transform" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
@@ -60,6 +69,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="find_edge (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="auto" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="find_edge" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -72,28 +102,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="image_processing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="auto" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CAPTURING" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CAPTURING/image_processing.py" />
+      <option name="SCRIPT_NAME" value="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING\LINE_DETECTION\find_edge.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -145,19 +154,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.find_edge" />
       <item itemvalue="Python.Hough_transform" />
-      <item itemvalue="Python.image_processing" />
-      <item itemvalue="Python.perspective" />
+      <item itemvalue="Python.find_edge" />
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.perspective" />
+      <item itemvalue="Python.find_edge (1)" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.find_edge (1)" />
         <item itemvalue="Python.find_edge" />
         <item itemvalue="Python.perspective" />
         <item itemvalue="Python.Hough_transform" />
-        <item itemvalue="Python.image_processing" />
       </list>
     </recent_temporary>
   </component>
@@ -219,7 +228,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609626427761</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="refactored">
+      <created>1609930834534</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1609930834534</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -242,46 +258,27 @@
     <MESSAGE value="perspective" />
     <MESSAGE value="back to find_edge,&#10;overflow fixed" />
     <MESSAGE value="rows translations" />
-    <option name="LAST_COMMIT_MESSAGE" value="rows translations" />
+    <MESSAGE value="refactored" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>33</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/LINE_DETECTION/Hough_transform.py</url>
-          <line>105</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/LINE_DETECTION/Hough_transform.py</url>
-          <line>49</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/LINE_DETECTION/Hough_transform.py</url>
-          <line>39</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py</url>
-          <line>21</line>
-          <option name="timeStamp" value="76" />
-        </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="trans % 10 == 0" language="Python" />
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/find_edge.py</url>
-          <line>48</line>
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>50</line>
           <option name="timeStamp" value="98" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/MAIN/main.py</url>
-          <line>81</line>
-          <option name="timeStamp" value="104" />
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>155</line>
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>87</line>
+          <option name="timeStamp" value="135" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

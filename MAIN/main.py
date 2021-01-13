@@ -1,5 +1,6 @@
 import datetime
 import time
+import queue
 
 import keyboard
 import pandas as pd
@@ -7,39 +8,67 @@ from PIL import Image
 from matplotlib import pyplot as plt
 import numpy as np
 
-
-from CAPTURING.capture_image import capture_image
-from CAPTURING.image_processing import process_image
-from CONFIG.config import window
-from IMAGE_PROCESSING.find_edge import find_edge_2
+from CC.cruise_control import change_speed
+from IMAGE_PROCESSING.CAPTURING.capture_image import capture_image
+# from IMAGE_PROCESSING.OCR.ocr import find_speed
+from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_speed, init_speed
+from IMAGE_PROCESSING.image_processing import process_image, binarize
+from CONFIG.config import window, window_speed, keys
+from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_edge
 from LC.lane_centering import apply_correction
+from SUPPORT.process_results import process_results_queue
 
 
 def run():
+    ref_digits = init_speed()
     while True:
         if keyboard.is_pressed('q'):
-            keyboard.press('c')
-            keyboard.release('c')
+            results_queue = queue.Queue(50)
+            # keyboard.press('c')
+            # keyboard.release('c')
             last_dist = None
             while True:
                 if keyboard.is_pressed('z'):
+                    keyboard.release(keys['up'])
+                    keyboard.release(keys['down'])
+                    keyboard.press_and_release('esc')
+                    process_results_queue(results_queue)
                     break
-                last_dist = activate_assist(last_dist)
+                # todo - if 'a' or 'd' pressed turn off
+                # todo - if indicators pressed change line (turn off, arrow dir1 for 1 s, arrow dir2 for 1 s, turn on)
+                st_LC = time.time()
+                action_results = activate_assist(last_dist)
+                last_dist = action_results[2]
+                print(f'LC: {time.time() - st_LC}')
+                st_CC = time.time()
+                speed = activate_speed(50, ref_digits)
+                print(f'CC: {time.time() - st_CC}, speed: {speed}')
+                if results_queue.full():
+                    results_queue.get()
+                results_queue.put(action_results)
+
 
 
 def activate_assist(last_dist=None):
     captured_image = capture_image(window)
     processed_image = process_image(captured_image)
-    dist, degree, step, image_with_line = find_edge_2(processed_image, save=False, last_dist=last_dist)
-    if dist is not None and degree is not None:
-        direction, time_s, dis, deg, cha = apply_correction(dist, degree, last_dist, simulate=False)
-        # if image_with_line is not None:
-        #     path = r'C:\PROGRAMOWANIE\auto_data\photos\image'
-        #     path_dist = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') \
-        #                 + '_tra_' + str(int(degree)) + '_dst_' + str(int(dist)) + '_max_' + str(int(step)) \
-        #                 + 'tis' + str(time_s) + '.png'
-        #     Image.fromarray(image_with_line).save(path_dist)
-    return dist
+    dist, trans, diff, image_with_line = find_edge(processed_image, save=False, last_dist=last_dist)
+    if dist is not None:
+        direction, time_s, dist_cor, degree_cor, change_cor = apply_correction(dist, trans, last_dist, simulate=False)
+    else:
+        dist_cor, degree_cor, change_cor, direction, time_s = None, None, None, None, None
+
+    return processed_image, image_with_line, dist, trans, diff, dist_cor, degree_cor, change_cor, direction, time_s
+
+
+def activate_speed(target_speed, ref_digits):
+    captured_image = capture_image(window_speed)
+    processed_image = process_image(captured_image)
+    # binary_image = binarize(processed_image)
+    # keyboard.press_and_release('esc')
+    current_speed = find_speed(processed_image, ref_digits)
+    change_speed(target_speed, current_speed)
+    return current_speed
 
 
 def activate_assist_n_times(num=1):
@@ -60,7 +89,7 @@ def activate_assist_n_times(num=1):
         st = time.time()
         captured_image = capture_image(window)
         processed_image = process_image(captured_image)
-        dist, degree, step, image_with_line = find_edge_2(processed_image, save=False, last_dist=last_dist)
+        dist, degree, step, image_with_line = find_edge(processed_image, save=False, last_dist=last_dist)
         if dist is not None and degree is not None:
             direction, time_s, dis, deg, cha = apply_correction(dist, degree, last_dist, simulate=False)
             if image_with_line is not None:
@@ -88,3 +117,4 @@ def activate_assist_n_times(num=1):
 
 if __name__ == '__main__':
     run()
+

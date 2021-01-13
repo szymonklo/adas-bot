@@ -5,7 +5,21 @@ window = {
     'height': 220,
 }
 
-min_diff = 800
+window_speed = {
+    'left':   1496,
+    'top':    710,
+    'width':  30,
+    'height': 18,
+}
+
+ref_digits_path = r'C:\PROGRAMOWANIE\auto_data\photos\ref_digits'
+
+# find_edge
+default_x1 = 379
+default_x2 = 679
+default_y1 = -60
+
+min_diff = 600
 
 target_distance = 600
 target_degree = 66
@@ -14,7 +28,10 @@ tolerance = 10
 keys = {
     'left': 'a',
     'right': 'd',
+    'up': 'w',
+    'down': 's',
 }
+speed_tolerance_up = 5
 
 x_margin = 200
 x_min = 620

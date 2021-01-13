@@ -18,6 +18,13 @@ def process_image(image):
     return processed_image
 
 
+def binarize(image):
+    ret, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+
+    return binary_image
+
+
+
 if __name__ == '__main__':
     # todo - implement
     pass

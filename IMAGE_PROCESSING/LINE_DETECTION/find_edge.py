@@ -7,18 +7,20 @@ from PIL import Image
 from math import sin, cos, pi
 from matplotlib import pyplot as plt
 
-from CONFIG.config import target_distance, target_degree, min_diff
+from CONFIG.config import target_distance, target_degree, min_diff, default_y1, default_x1, default_x2
 
 
-def find_edge_2(image, save=False, edge_thickness=1, last_dist=None):
-    x1 = 379
-    x2 = 679
+def find_edge(image, save=False, edge_thickness=1, last_dist=None):
+
     if last_dist is not None:
-        x1 = last_dist - 150
-        x2 = last_dist + 150
+        x1 = min(last_dist - 150, image.shape[1] - 300)
+        x2 = min(last_dist + 150, image.shape[1])
     else:
         last_dist = 0
-    y1 = -60
+        x1 = default_x1
+        x2 = default_x2
+    y1 = default_y1
+
     line_h = Line(x1=x1, y1=image.shape[0] + y1, x2=x2, y2=image.shape[0] + y1)
     line_v1 = Line(x1=x1, y1=image.shape[0] + y1, x2=x1, y2=image.shape[0])
     line_v2 = Line(x1=x2, y1=image.shape[0] + y1, x2=x2, y2=image.shape[0])
@@ -80,7 +82,7 @@ def find_edge_2(image, save=False, edge_thickness=1, last_dist=None):
         path_raw = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_raw' + '.png'
         Image.fromarray(image).save(path_raw)
 
-    if max_diff > min_diff:
+    if max_diff >= min_diff:
         return dst_max, trans_max, max_diff, image_with_line
     else:
         return None, None, None, None
@@ -139,15 +141,16 @@ class Rectangle:
 
 
 if __name__ == '__main__':
-    path = r'C:\PROGRAMOWANIE\auto_data\photos'
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\2021-01-13\20_10_03'
+    last_dist = 500
     dists = []
     for path, subdir, files in os.walk(path):
         for file in files:
-            if 'image2021-01-05-18_00_24_tra_20_dst_549_max_533tis0.05' in file:
+            if 'raw' in file:
                 st = time.time()
                 image = cv2.imread(os.path.join(path, file))
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                find_edge_2(image, edge_thickness=3, last_dist=681)
+                last_dist, _, _, _ = find_edge(image, edge_thickness=3, last_dist=last_dist)
                 print(f'E2: {time.time() - st}')
 
     pass
