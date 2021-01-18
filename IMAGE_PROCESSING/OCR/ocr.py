@@ -1,14 +1,19 @@
+import os
+import time
+
+import cv2
 import keyboard
+import numpy as np
 import pytesseract
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
-def find_speed(image):
+def find_speed_ocr(image):
     text_speed = ocr(image)
     try:
         speed = int(text_speed)
-        if speed < 170:
+        if 10 <= speed <= 180 and speed % 10 == 0:
             return speed
         else:
             return None
@@ -17,7 +22,15 @@ def find_speed(image):
 
 
 def ocr(image):
-    text = pytesseract.image_to_string(image, config='--oem 1 --psm 8 digits')
+    # text = pytesseract.image_to_string(image, config='--oem 1 --psm 8 digits')
+    # keyboard.press_and_release('esc')
+    try:
+        text = pytesseract.image_to_string(image, config='-l eng --oem 1 --psm 8 digits')
+    except ValueError as e:
+        print(str(e))
+        print(str(e))
+
+
     # keyboard.press_and_release('esc')
 
     return text
@@ -56,3 +69,15 @@ ocr_result_2 = pytesseract.image_to_string(image, lang='eng',
 ocr_result_3 = pytesseract.image_to_string(image, lang='eng',
                                            config='-c tessedit_char_whitelist=0123456789')  
 """
+
+if __name__ == '__main__':
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\sr\2021-01-18\15_10_03'
+    dists = []
+    for path, subdir, files in os.walk(path):
+        for file in files:
+            if 'raw' in file:
+                st = time.time()
+                image = cv2.imread(os.path.join(path, file))
+                # speed = pytesseract.image_to_string(os.path.join(path, file), config='--oem 1 --psm 8 digits')
+                speed = find_speed_ocr(image)
+                print(f'F: {time.time() - st}, speed: {speed}')

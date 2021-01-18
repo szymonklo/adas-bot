@@ -12,6 +12,13 @@ window_speed = {
     'height': 18,
 }
 
+window_signs = {
+    'left':   1000,
+    'top':    250,
+    'width':  600,
+    'height': 250,
+}
+
 ref_digits_path = r'C:\PROGRAMOWANIE\auto_data\photos\ref_digits'
 
 # find_edge

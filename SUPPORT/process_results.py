@@ -4,18 +4,9 @@ import os
 from PIL import Image
 
 
-def process_results_queue(results_queue):
+def process_results_queue(results_queue, path):
+    directory_path = prepare_dir(path)
     num = 0
-    path = r'C:\PROGRAMOWANIE\auto_data\photos'
-    directory_name = datetime.datetime.now().strftime('%Y-%m-%d')
-    directory_path = os.path.join(path, directory_name)
-    if not os.path.isdir(directory_path):
-        os.mkdir(directory_path)
-    directory_name = datetime.datetime.now().strftime('%H_%M_%S')
-    directory_path = os.path.join(directory_path, directory_name)
-    if not os.path.isdir(directory_path):
-        os.mkdir(directory_path)
-
     while not results_queue.empty():
         processed_image, image_with_line, dist, trans, diff, dist_cor, trans_cor, change_cor, direction, time_s = results_queue.get()
         if processed_image is not None:
@@ -32,3 +23,31 @@ def process_results_queue(results_queue):
                          + '.png'
             Image.fromarray(image_with_line).save(os.path.join(directory_path, image_name))
         num += 1
+
+
+def process_signs_queue(signs_queue, path):
+    directory_path = prepare_dir(path)
+    num = 0
+    while not signs_queue.empty():
+        x, y, w, h, sign_image, target_speed = signs_queue.get()
+        if sign_image is not None:
+            image_name = str(num) \
+                         + '_x_' + str(x) + '_y_' + str(y) + '_w_' + str(w) + '_h_' + str(h) \
+                         + '_speed_' + str(target_speed) \
+                         + '_raw'\
+                         + '.png'
+            Image.fromarray(sign_image).save(os.path.join(directory_path, image_name))
+        num += 1
+
+
+def prepare_dir(path):
+    directory_name = datetime.datetime.now().strftime('%Y-%m-%d')
+    directory_path = os.path.join(path, directory_name)
+    if not os.path.isdir(directory_path):
+        os.mkdir(directory_path)
+    directory_name = datetime.datetime.now().strftime('%H_%M_%S')
+    directory_path = os.path.join(directory_path, directory_name)
+    if not os.path.isdir(directory_path):
+        os.mkdir(directory_path)
+
+    return directory_path
