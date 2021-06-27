@@ -1,3 +1,4 @@
+import ctypes
 import os
 import time
 
@@ -5,11 +6,13 @@ import cv2
 import keyboard
 import numpy as np
 import pytesseract
+from pytessy import pytessy
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
 def find_speed_ocr(image):
+    text_speed = ocr_pytessy(image)
     text_speed = ocr(image)
     try:
         speed = int(text_speed)
@@ -31,6 +34,20 @@ def ocr(image):
         print(str(e))
 
 
+    # keyboard.press_and_release('esc')
+
+    return text
+
+
+def ocr_pytessy(image):
+    py_tessy = pytessy.PyTessy()
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    c_array = np.ascontiguousarray(image, dtype=int)
+    pointer = c_array.ctypes.data_as(ctypes.c_void_p)
+
+    text = py_tessy.read(pointer, image.shape[1], image.shape[0], 8, raw=True)
+    text_py = pytesseract.image_to_string(image, config='-l eng --oem 1 --psm 8 digits')
+    # text = pytesseract.image_to_string(image, config='--oem 1 --psm 8 digits')
     # keyboard.press_and_release('esc')
 
     return text
@@ -79,5 +96,6 @@ if __name__ == '__main__':
                 st = time.time()
                 image = cv2.imread(os.path.join(path, file))
                 # speed = pytesseract.image_to_string(os.path.join(path, file), config='--oem 1 --psm 8 digits')
-                speed = find_speed_ocr(image)
+                # speed = find_speed_ocr(image)
+                speed = ocr_pytessy(image)
                 print(f'F: {time.time() - st}, speed: {speed}')

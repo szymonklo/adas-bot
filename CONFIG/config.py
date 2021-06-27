@@ -5,9 +5,16 @@ window = {
     'height': 220,
 }
 
+# window_speed = {
+#     'left':   1496,
+#     'top':    710,
+#     'width':  30,
+#     'height': 18,
+# }
+# 2021-06-27 window 1920x1080
 window_speed = {
     'left':   1496,
-    'top':    710,
+    'top':    770,
     'width':  30,
     'height': 18,
 }

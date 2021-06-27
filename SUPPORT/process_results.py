@@ -23,6 +23,7 @@ def process_results_queue(results_queue, path):
                          + '.png'
             Image.fromarray(image_with_line).save(os.path.join(directory_path, image_name))
         num += 1
+    return processed_image
 
 
 def process_signs_queue(signs_queue, path):
