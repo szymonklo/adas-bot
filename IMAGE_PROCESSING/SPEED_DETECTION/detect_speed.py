@@ -6,15 +6,12 @@ import keyboard
 import numpy as np
 from PIL import Image
 
-from CONFIG.config import ref_digits_path
 
-
-# todo - class
-def init_speed():
+def init_speed(path):
     ref_digits = {}
-    files = os.listdir(ref_digits_path)
+    files = os.listdir(path)
     for file in files:
-        image = cv2.imread(os.path.join(ref_digits_path, file))
+        image = cv2.imread(os.path.join(path, file))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # image = image.astype(np.int16)
         image = image.astype(np.uint8)
@@ -29,7 +26,7 @@ def find_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
 
     digits = ['']
     for digit_image in digit_images:
-        digit = find_digit(digit_image, ref_digits)
+        digit = find_digit(digit_image, ref_digits, axis=axis)
         if digit is not None:
             if digit in '0123456789':
                 digits.append(digit)
@@ -46,12 +43,12 @@ def find_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
     return None  # temp
 
 
-def find_speed2(digit_images, ref_digits_signs):
+def find_speed2(digit_images, ref_digits_signs, axis=1):
 
     digits = ['']
     for digit_image in digit_images:
         # keyboard.press_and_release('esc')
-        digit = find_digit(digit_image, ref_digits_signs)
+        digit = find_digit(digit_image, ref_digits_signs, axis=axis)
         if digit is not None:
             if digit in '0123456789':
                 digits.append(digit)
@@ -59,7 +56,7 @@ def find_speed2(digit_images, ref_digits_signs):
     if digits != ['']:
         speed = int(''.join(digits))
         print(speed)
-        keyboard.press_and_release('esc')
+        # keyboard.press_and_release('esc')
         return speed
     return None  # temp
 
@@ -149,16 +146,17 @@ def find_limits(x_sum, minimum_sum, min_width, first_index=1, last_index=-1):
 
 
 # 122, 102, 92, 87(67), 86(30, 60), 85(65, 35), 84(34),
-def find_digit(digit_image, ref_digits):
+def find_digit(digit_image, ref_digits, axis=0):
     # todo 2021-06-27:  after debug move astype(int) outside
     diffs = {}
     minimum = ('-1', 255 * digit_image.shape[0] * digit_image.shape[1])
     mini = []
     if digit_image.shape[0] != ref_digits['0'].shape[0]:
         # digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[0], int(digit_image.shape[1] * ref_digits['0'].shape[0] / digit_image.shape[0])))
-        digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[0], int(ref_digits['0'].shape[0]*2/3)))
+        digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[1], ref_digits['0'].shape[0]))
     for digit, image in ref_digits.items():
         if digit_image.shape[1] == image.shape[1]:
+            print(np.sum(abs(image.astype(int) - digit_image.astype(int))))
             diffs[digit] = np.sum(abs(image.astype(int) - digit_image.astype(int)))
             if diffs[digit] < minimum[1]:
                 minimum = (digit, diffs[digit])
@@ -184,7 +182,7 @@ def find_digit(digit_image, ref_digits):
     path = r'C:\PROGRAMOWANIE\auto_data\photos\sign_digits\\' + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S')\
            + 'sum' + str(minimum[1]) + 'dig' + minimum[0] + '.png'
 
-    if len(ref_digits) < 10:
+    if digit_image.shape[0] != 18:#len(ref_digits) < 10:
         Image.fromarray(digit_image).save(path)
     if minimum[0] != '-1':
         return minimum[0]

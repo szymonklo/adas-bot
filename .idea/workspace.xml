@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="sign recognition">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="sign recognition - find_speed_limit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CC/cruise_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/CC/cruise_control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/OCR/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/OCR/ocr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
     </list>
@@ -247,7 +244,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611002334513</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="sign recognition - find_speed_limit">
+      <created>1624826812544</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1624826812544</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -273,7 +277,8 @@
     <MESSAGE value="refactored" />
     <MESSAGE value="digits detection, cruise control" />
     <MESSAGE value="sign recognition" />
-    <option name="LAST_COMMIT_MESSAGE" value="sign recognition" />
+    <MESSAGE value="sign recognition - find_speed_limit" />
+    <option name="LAST_COMMIT_MESSAGE" value="sign recognition - find_speed_limit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -321,7 +326,7 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>160</line>
+          <line>157</line>
           <option name="timeStamp" value="160" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -338,24 +343,24 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>40</line>
+          <line>37</line>
           <option name="timeStamp" value="171" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>53</line>
+          <line>50</line>
           <option name="timeStamp" value="172" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="digit_images == []" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>129</line>
+          <line>126</line>
           <option name="timeStamp" value="178" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>62</line>
-          <option name="timeStamp" value="179" />
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
+          <line>34</line>
+          <option name="timeStamp" value="182" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -18,7 +18,7 @@ from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, pre
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_speed, init_speed, find_digit_images
 from IMAGE_PROCESSING.image_processing import process_image_to_array, binarize, process_image_to_grayscale, \
     filter_image, filter_image2
-from CONFIG.config import window, window_speed, keys, window_signs
+from CONFIG.config import window, window_speed, keys, window_signs, RefDigitsPath
 from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_edge
 from LC.lane_centering import apply_correction
 from SUPPORT.process_results import process_results_queue, process_signs_queue
@@ -26,15 +26,18 @@ from SUPPORT.process_results import process_results_queue, process_signs_queue
 
 def run():
     target_speed = 50
-    ref_digits = init_speed()
-    ref_digits_signs1 = init_speed()
+    ref_digits = init_speed(RefDigitsPath.cluster)
+    ref_digits_signs1 = init_speed(RefDigitsPath.signs)
     ref_digits_signs = {}
 
     for digit, ref_digits_sign1 in ref_digits_signs1.items():
         width = ref_digits_sign1.shape[0]
-        widths = 9, 18, int(0.4 * width), int(0.6 * width)
-        ref_digits_sign = find_digit_images(ref_digits_sign1, ref_digits={}, widths=widths, axis=1)
-        ref_digits_signs[digit] = ref_digits_sign[0]
+        if width != 15:
+            widths = 9, 18, int(0.4 * width), int(0.6 * width)
+            ref_digits_sign = find_digit_images(ref_digits_sign1, ref_digits={}, widths=widths, axis=1)
+            ref_digits_signs[digit] = ref_digits_sign[0]
+        else:
+            ref_digits_signs[digit] = ref_digits_sign1
 
     while True:
         if keyboard.is_pressed('q'):
@@ -80,10 +83,11 @@ def run():
                 x, y, w, h, sign_image, target_speed_found = signs_results
                 if target_speed_found is not None:
                     target_speed = target_speed_found
+                    if signs_queue.full():
+                        signs_queue.get()
+                    signs_queue.put(signs_results)
+
                 print(f'SR: {time.time() - st_sr}, x: {x}, y: {y}, w: {w}, h: {h}, speed_limit: {target_speed_found}')
-                if signs_queue.full():
-                    signs_queue.get()
-                signs_queue.put(signs_results)
 
 
 def activate_assist(last_dist=None):

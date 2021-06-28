@@ -116,7 +116,7 @@ def find_speed_limit(sign_image, ref_digits_signs):
                 digit_image = digit_images_split_v[0]
                 if digit_image is not None:
                     digit_images.append(digit_image)
-    target_speed = find_speed2(digit_images, ref_digits_signs=ref_digits_signs)
+    target_speed = find_speed2(digit_images, ref_digits_signs=ref_digits_signs, axis=1)
 
     return target_speed
 

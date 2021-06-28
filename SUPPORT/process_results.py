@@ -1,6 +1,7 @@
 import datetime
 import os
 
+import keyboard
 from PIL import Image
 
 
@@ -30,6 +31,7 @@ def process_signs_queue(signs_queue, path):
     directory_path = prepare_dir(path)
     num = 0
     while not signs_queue.empty():
+        # keyboard.press_and_release('esc')
         x, y, w, h, sign_image, target_speed = signs_queue.get()
         if sign_image is not None:
             image_name = str(num) \
