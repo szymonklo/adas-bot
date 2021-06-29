@@ -44,6 +44,7 @@ class RefDigitsPath:
     cluster = r'C:\PROGRAMOWANIE\auto_data\photos\ref_digits'
     signs = r'C:\PROGRAMOWANIE\auto_data\photos\ref_digits_signs'
 
+
 # find_edge
 default_x1 = 379
 default_x2 = 679
@@ -55,12 +56,14 @@ target_distance = 600
 target_degree = 66
 tolerance = 10
 
-keys = {
-    'left': 'a',
-    'right': 'd',
-    'up': 'w',
-    'down': 's',
-}
+
+class Keys:
+    left = 'a'
+    right = 'd'
+    up = 'w'
+    down = 's'
+
+
 speed_tolerance_up = 5
 
 x_margin = 200

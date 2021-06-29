@@ -6,13 +6,15 @@ import keyboard
 
 import cv2
 import numpy as np
+from PIL import Image
 
-from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_speed, find_digit_images, find_speed2
+from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed, find_digit_images, find_speed_from_digit_images
 from IMAGE_PROCESSING.image_processing import filter_image2
+from SUPPORT.process_results import prepare_dir
 
 
 def find_circles(mask, image):
-    # todo - 1. circle vs triangle vs rectangle
+    # todo - 1. circle vs triangle vs rectangle -> first trial to solve as avg dev
     #        2. join split contours?
     # circles = cv2.HoughCircles(image=mask, method=cv2.HOUGH_GRADIENT, dp=1, minDist=1)
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -44,25 +46,46 @@ def find_circles(mask, image):
                 dist_from_center = np.sqrt(x2 + y2)
                 deviation = (dist_from_center - radius) / radius
                 avg_dev = abs(np.mean(deviation))
+                circle_perieter = 2 * math.pi * radius
+
+                circularity = abs(perimeter - circle_perieter) / circle_perieter
 
                 if avg_dev < 0.2:
+                    # max_additional_length_vs_circle = 0.05
+                    max_additional_length_vs_circle = 2
 
-                    max_additional_length_vs_circle = 0.05
-                    circle_perieter = 2 * math.pi * radius
-
-                    circularity = abs(perimeter - circle_perieter) / circle_perieter
-
-                    if abs(perimeter - circle_perieter) < max_additional_length_vs_circle * circle_perieter:
+                    if circularity < max_additional_length_vs_circle:
                         x = x_mec - radius
                         y = y_mec - radius
                         w = 2 * radius
                         h = 2 * radius
 
                         sign_image = image[y: y + h, x: x + w, :]
-                        print(time.time())
+                        # print(time.time())
                         # keyboard.press_and_release('esc')
 
+                        # for debug only
+                        path = r'C:\PROGRAMOWANIE\auto_data\photos\sr'
+                        directory_path = prepare_dir(path)
+                        num = 0
+                        if sign_image is not None:
+                            image_name = str(num) \
+                                         + '_x_' + str(x) + '_y_' + str(y) + '_w_' + str(w) + '_h_' + str(h) \
+                                         + '_speed_' + 'NA' \
+                                         + '_raw' \
+                                         + '.png'
+                            try:
+                                Image.fromarray(sign_image).save(os.path.join(directory_path, image_name))
+                            except ValueError:
+                                pass    # todo ValueError: tile cannot extend outside image
                         return x, y, w, h, sign_image
+
+                image_name = 'c' + str(time.time()) + '.png'
+                Image.fromarray(image).save(
+                    os.path.join(r'C:\PROGRAMOWANIE\auto_data\photos\rejected_circles', image_name))
+                image_name = 'c' + str(time.time()) + '_avg_dev_' + str(avg_dev) + '_circ_' + str(circularity) + '.png'
+                Image.fromarray(im_with_count).save(
+                    os.path.join(r'C:\PROGRAMOWANIE\auto_data\photos\rejected_circles', image_name))
 
     return None, None, None, None, None
 
@@ -116,7 +139,7 @@ def find_speed_limit(sign_image, ref_digits_signs):
                 digit_image = digit_images_split_v[0]
                 if digit_image is not None:
                     digit_images.append(digit_image)
-    target_speed = find_speed2(digit_images, ref_digits_signs=ref_digits_signs, axis=1)
+    target_speed = find_speed_from_digit_images(digit_images, ref_digits=ref_digits_signs, axis=1, minimum=10)
 
     return target_speed
 

@@ -5,7 +5,6 @@ import cv2
 import numpy as np
 from PIL import Image
 from math import sin, cos, pi
-from matplotlib import pyplot as plt
 
 from CONFIG.config import target_distance, target_degree, min_diff, default_y1, default_x1, default_x2
 
@@ -69,7 +68,7 @@ def find_edge(image, save=False, edge_thickness=1, last_dist=None):
 
     line = Line(dst_max, 0, alpha=270, length=image.shape[0])
     image_with_line = draw_lines(image_with_area, [line])
-    print(dst_max, trans_max, max_diff)
+    # print(dst_max, trans_max, max_diff)
     # cv2.imshow("image_with_line", image_with_line)
     # cv2.waitKey(0)
 

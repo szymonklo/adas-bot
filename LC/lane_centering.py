@@ -2,7 +2,7 @@ import time
 from math import cos, radians
 import keyboard
 
-from CONFIG.config import target_distance, keys, tolerance, min_diff, target_degree
+from CONFIG.config import target_distance, Keys, tolerance, min_diff, target_degree
 
 
 def apply_correction(distance, degree, last_distance, simulate=False):
@@ -27,15 +27,15 @@ def apply_correction(distance, degree, last_distance, simulate=False):
     time_s = min(abs(correction), 0.05)
 
     if correction > 0:
-        direction = 'right'
+        direction_key = Keys.right
     else:
-        direction = 'left'
+        direction_key = Keys.left
     if not simulate:
-        steer(direction, time_s)
-    return direction, time_s, dist_correction, degree_correction, change_correction
+        steer(direction_key, time_s)
+    return direction_key, time_s, dist_correction, degree_correction, change_correction
 
 
-def steer(direction, time_s):
-    keyboard.press(keys[direction])
+def steer(direction_key, time_s):
+    keyboard.press(direction_key)
     time.sleep(time_s)
-    keyboard.release(keys[direction])
+    keyboard.release(direction_key)

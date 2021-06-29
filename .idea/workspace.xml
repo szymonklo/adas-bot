@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="sign recognition - find_speed_limit">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="sign recognition - ref_digits_signs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC/cruise_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/CC/cruise_control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LC/lane_centering.py" beforeDir="false" afterPath="$PROJECT_DIR$/LC/lane_centering.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,7 +253,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624826812544</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="sign recognition - ref_digits_signs">
+      <created>1624900683595</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1624900683595</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -278,7 +287,8 @@
     <MESSAGE value="digits detection, cruise control" />
     <MESSAGE value="sign recognition" />
     <MESSAGE value="sign recognition - find_speed_limit" />
-    <option name="LAST_COMMIT_MESSAGE" value="sign recognition - find_speed_limit" />
+    <MESSAGE value="sign recognition - ref_digits_signs" />
+    <option name="LAST_COMMIT_MESSAGE" value="sign recognition - ref_digits_signs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -286,17 +296,17 @@
         <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="trans % 10 == 0" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>50</line>
+          <line>49</line>
           <option name="timeStamp" value="98" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>22</line>
+          <line>24</line>
           <option name="timeStamp" value="141" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>90</line>
+          <line>113</line>
           <option name="timeStamp" value="142" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -321,12 +331,12 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>64</line>
+          <line>80</line>
           <option name="timeStamp" value="159" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>157</line>
+          <line>150</line>
           <option name="timeStamp" value="160" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -341,20 +351,15 @@
           <line>426</line>
           <option name="timeStamp" value="168" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>37</line>
-          <option name="timeStamp" value="171" />
-        </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>50</line>
+          <line>35</line>
           <option name="timeStamp" value="172" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="digit_images == []" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>126</line>
+          <line>118</line>
           <option name="timeStamp" value="178" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">

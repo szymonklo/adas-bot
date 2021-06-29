@@ -19,46 +19,36 @@ def init_speed(path):
     return ref_digits
 
 
-def find_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
+def find_current_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
     # if image.shape[0] != 18:
     # keyboard.press_and_release('esc')
     digit_images = find_digit_images(image, ref_digits, minimum_sum=minimum_sum, widths=widths, axis=axis)
+    speed = find_speed_from_digit_images(digit_images, ref_digits, axis=axis, minimum=0)
+    return speed
+
+
+def find_speed_from_digit_images(digit_images, ref_digits, axis=1, minimum=10):
 
     digits = ['']
-    for digit_image in digit_images:
+    for i, digit_image in enumerate(digit_images):
+        # todo - if 2nd of 2 digits or 3rd of 3 digits not detected -> assume 0
+        # keyboard.press_and_release('esc')
         digit = find_digit(digit_image, ref_digits, axis=axis)
         if digit is not None:
             if digit in '0123456789':
                 digits.append(digit)
+        elif (len(digit_images) == 2 and i == 1) or (len(digit_images) == 3 and i == 2):
+            digit = '0'
+            digits.append(digit)
 
     if digits != ['']:
         spd_str = ''.join(digits)
-        # if '8' in spd_str:
-        #     keyboard.press_and_release('esc')
-        #     d1=1
         speed = int(spd_str)
-        # print(speed)
-
-        return speed
-    return None  # temp
-
-
-def find_speed2(digit_images, ref_digits_signs, axis=1):
-
-    digits = ['']
-    for digit_image in digit_images:
-        # keyboard.press_and_release('esc')
-        digit = find_digit(digit_image, ref_digits_signs, axis=axis)
-        if digit is not None:
-            if digit in '0123456789':
-                digits.append(digit)
-
-    if digits != ['']:
-        speed = int(''.join(digits))
-        print(speed)
-        # keyboard.press_and_release('esc')
-        return speed
-    return None  # temp
+        if speed >= minimum:
+            # print(speed)
+            # keyboard.press_and_release('esc')
+            return speed
+    return None
 
 
 def find_digit_images(image, ref_digits, minimum_sum=None, widths=None, axis=0):
@@ -113,6 +103,8 @@ def find_digit_images(image, ref_digits, minimum_sum=None, widths=None, axis=0):
                         digit_image = image[:, start: end + 1]
                     elif axis == 1:
                         digit_image = image[start: end + 1, :]
+                    else:
+                        raise NotImplementedError
                     digit_images.append(digit_image)
                 else:
                     # keyboard.press_and_release('esc')
@@ -149,14 +141,15 @@ def find_limits(x_sum, minimum_sum, min_width, first_index=1, last_index=-1):
 def find_digit(digit_image, ref_digits, axis=0):
     # todo 2021-06-27:  after debug move astype(int) outside
     diffs = {}
-    minimum = ('-1', 255 * digit_image.shape[0] * digit_image.shape[1])
+    # minimum = ('-1', 255 * digit_image.shape[0] * digit_image.shape[1])
+    minimum = ('-1', 10000)
     mini = []
     if digit_image.shape[0] != ref_digits['0'].shape[0]:
         # digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[0], int(digit_image.shape[1] * ref_digits['0'].shape[0] / digit_image.shape[0])))
         digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[1], ref_digits['0'].shape[0]))
     for digit, image in ref_digits.items():
         if digit_image.shape[1] == image.shape[1]:
-            print(np.sum(abs(image.astype(int) - digit_image.astype(int))))
+            # print(np.sum(abs(image.astype(int) - digit_image.astype(int))))
             diffs[digit] = np.sum(abs(image.astype(int) - digit_image.astype(int)))
             if diffs[digit] < minimum[1]:
                 minimum = (digit, diffs[digit])
@@ -184,7 +177,7 @@ def find_digit(digit_image, ref_digits, axis=0):
 
     if digit_image.shape[0] != 18:#len(ref_digits) < 10:
         Image.fromarray(digit_image).save(path)
-    if minimum[0] != '-1':
+    if minimum[0] != '-1' and minimum[1] < 10000:
         return minimum[0]
     else:
         return None
