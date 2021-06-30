@@ -43,14 +43,15 @@ def process_signs_queue(signs_queue, path):
         num += 1
 
 
-def prepare_dir(path):
+def prepare_dir(path, hour=True):
     directory_name = datetime.datetime.now().strftime('%Y-%m-%d')
     directory_path = os.path.join(path, directory_name)
     if not os.path.isdir(directory_path):
         os.mkdir(directory_path)
-    directory_name = datetime.datetime.now().strftime('%H_%M_%S')
-    directory_path = os.path.join(directory_path, directory_name)
-    if not os.path.isdir(directory_path):
-        os.mkdir(directory_path)
+    if hour is True:
+        directory_name = datetime.datetime.now().strftime('%H_%M_%S')
+        directory_path = os.path.join(directory_path, directory_name)
+        if not os.path.isdir(directory_path):
+            os.mkdir(directory_path)
 
     return directory_path

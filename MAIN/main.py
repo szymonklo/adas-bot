@@ -11,14 +11,15 @@ import numpy as np
 
 from CC.cruise_control import change_speed
 from IMAGE_PROCESSING.CAPTURING.capture_image import capture_image
+from IMAGE_PROCESSING.PLATES_DETECTION.detect_plate import detect_plate
 from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, prepare_sign_to_digits_recognition, \
     find_speed_limit
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed, init_speed, find_digit_images
 from IMAGE_PROCESSING.image_processing import process_image_to_array, process_image_to_grayscale, filter_image
-from CONFIG.config import window, window_speed, Keys, window_signs, RefDigitsPath
+from CONFIG.config import window, window_speed, Keys, window_signs, RefDigitsPath, window_plates
 from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_edge
 from LC.lane_centering import apply_correction
-from SUPPORT.process_results import process_results_queue, process_signs_queue
+from SUPPORT.process_results import process_results_queue, process_signs_queue, prepare_dir
 
 
 def run():
@@ -44,10 +45,17 @@ def run():
                 # todo - if 'a' or 'd' pressed turn off
                 # todo - if indicators pressed change line (turn off, arrow dir1 for 1 s, arrow dir2 for 1 s, turn on)
 
-                if keyboard.is_pressed('p'):
-                    image_name = 'p' + str(time.time()) + '.png'
+                if keyboard.is_pressed('o'):
+                    # keyboard.press_and_release('esc')
+                    directory_path = prepare_dir(r'C:\PROGRAMOWANIE\auto_data\photos\o', hour=False)
+
+                    image_name = datetime.datetime.now().strftime('%H_%M_%S')
+                    image_name += '.png'
+                    captured_image = capture_image(window_plates)
+                    processed_image = process_image_to_array(captured_image)
                     if processed_image is not None:
-                        Image.fromarray(processed_image).save(os.path.join(r'C:\PROGRAMOWANIE\auto_data\photos\p', image_name))
+
+                        Image.fromarray(processed_image).save(os.path.join(directory_path, image_name))
 
                 st_lc = time.time()
                 action_results = activate_assist(last_dist)
@@ -57,6 +65,8 @@ def run():
                 st_cc = time.time()
                 speed = activate_speed(target_speed, ref_digits)
                 print(f'CC: {time.time() - st_cc}, speed: {speed}, target_speed: {target_speed}')
+
+                activate_plate()
 
                 if results_queue.full():
                     results_queue.get()
@@ -88,6 +98,13 @@ def init_ref_digits():
             ref_digits_signs[digit] = ref_digits_sign1
 
     return ref_digits, ref_digits_signs
+
+
+def activate_plate():
+    captured_image = capture_image(window)
+    processed_image = process_image_to_array(captured_image)
+    processed_image = process_image_to_grayscale(processed_image)
+    detect_plate(processed_image)
 
 
 def activate_assist(last_dist=None):

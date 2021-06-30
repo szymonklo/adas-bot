@@ -12,6 +12,13 @@ window = {
     'height': 220,
 }
 
+window_plates = {
+    'left':   630,
+    'top':    200,
+    'width':  990,
+    'height': 480,
+}
+
 # window_speed = {
 #     'left':   1496,
 #     'top':    710,
