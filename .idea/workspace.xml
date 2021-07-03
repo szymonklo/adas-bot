@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="refactored">
-      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="detect_plate">
+      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_lines.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +23,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="1lzDTW1pHi8Nvw8B1tKpIRGeiyN" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -33,15 +41,19 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING\LINE_DETECTION" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING" />
       <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING\LINE_DETECTION" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.detect_plate">
+  <component name="RunManager" selected="Python.find_edge">
     <configuration name="detect_plate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -63,7 +75,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="image_processing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="find_edge" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -71,11 +83,32 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="find_lines" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="auto" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_lines.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -105,7 +138,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="ocr" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="perspective" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -113,32 +146,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/OCR" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/OCR/ocr.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="sign_recognition" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="auto" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -148,19 +160,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.image_processing" />
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.ocr" />
-      <item itemvalue="Python.sign_recognition" />
       <item itemvalue="Python.detect_plate" />
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.perspective" />
+      <item itemvalue="Python.find_lines" />
+      <item itemvalue="Python.find_edge" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.find_edge" />
+        <item itemvalue="Python.find_lines" />
+        <item itemvalue="Python.perspective" />
         <item itemvalue="Python.detect_plate" />
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.sign_recognition" />
-        <item itemvalue="Python.image_processing" />
-        <item itemvalue="Python.ocr" />
       </list>
     </recent_temporary>
   </component>
@@ -264,8 +276,25 @@
       <option name="project" value="LOCAL" />
       <updated>1624991088151</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="detect_plate">
+      <created>1625086578845</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1625086578845</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -292,17 +321,12 @@
     <MESSAGE value="sign recognition - find_speed_limit" />
     <MESSAGE value="sign recognition - ref_digits_signs" />
     <MESSAGE value="refactored" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactored" />
+    <MESSAGE value="detect_plate" />
+    <option name="LAST_COMMIT_MESSAGE" value="detect_plate" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <condition expression="trans % 10 == 0" language="Python" />
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>49</line>
-          <option name="timeStamp" value="98" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
           <line>24</line>
@@ -378,13 +402,28 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>47</line>
+          <line>48</line>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
           <line>24</line>
           <option name="timeStamp" value="192" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
+          <line>63</line>
+          <option name="timeStamp" value="193" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py</url>
+          <line>23</line>
+          <option name="timeStamp" value="194" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_lines.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="195" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

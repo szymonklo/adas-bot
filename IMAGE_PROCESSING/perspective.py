@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -23,7 +25,10 @@ def perspective(raw):
 
 
 if __name__ == '__main__':
-    image = cv2.imread(r'C:\PROGRAMOWANIE\auto_data\photos\image001.png', cv2.IMREAD_GRAYSCALE)
-    image_cropped = image[y_min: y_max, x_min - x_margin: x_max + x_margin]
+    image = cv2.imread(r'C:\PROGRAMOWANIE\auto_data\photos\lc\2021-06-30\22_35_43\0_raw.png', cv2.IMREAD_GRAYSCALE)
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\lc\2021-06-30\22_35_43\0_raw.png'
+    image = cv2.imread(path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # image_cropped = image[y_min: y_max, x_min - x_margin: x_max + x_margin]
 
-    perspective(image_cropped)
+    perspective(image)
