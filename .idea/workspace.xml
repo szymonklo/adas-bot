@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="detect_plate">
-      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_lines.py" afterDir="false" />
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="find_edge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,7 +281,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625086578845</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="find_edge">
+      <created>1625316454375</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1625316454375</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -309,7 +314,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="find_edge" />
     <MESSAGE value="rotate and crop" />
     <MESSAGE value="return dist, degree" />
     <MESSAGE value="steering" />
@@ -322,7 +326,8 @@
     <MESSAGE value="sign recognition - ref_digits_signs" />
     <MESSAGE value="refactored" />
     <MESSAGE value="detect_plate" />
-    <option name="LAST_COMMIT_MESSAGE" value="detect_plate" />
+    <MESSAGE value="find_edge" />
+    <option name="LAST_COMMIT_MESSAGE" value="find_edge" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -424,6 +429,26 @@
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_lines.py</url>
           <line>27</line>
           <option name="timeStamp" value="195" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>160</line>
+          <option name="timeStamp" value="203" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>166</line>
+          <option name="timeStamp" value="204" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>144</line>
+          <option name="timeStamp" value="205" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>105</line>
+          <option name="timeStamp" value="207" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

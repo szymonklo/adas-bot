@@ -57,7 +57,7 @@ default_x1 = 379
 default_x2 = 679
 default_y1 = -60
 
-min_diff = 600
+min_diff = 10   # 60 px -> diff thresh 600
 
 target_distance = 600
 target_degree = 66
