@@ -6,15 +6,14 @@ import numpy as np
 from PIL import Image
 from math import sin, cos, pi
 
-from CONFIG.config import target_distance, target_degree, min_diff, default_y1, default_x1, default_x2, window
+from CONFIG.config import target_distance, target_degree, min_diff, default_y1, default_x1, default_x2, window, steps, \
+    height_step, bottom_dist
 
 
 def find_curvy_edge(image, save=False, edge_thickness=1, last_dist=None, last_trans=None, half_search_width=150,
-              right_margin=300, y1=default_y1, y2=window['height']):
+              right_margin=300, y1=default_y1, y2=window['height'], bottom=bottom_dist):
     photo_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:-5]
-    bottom_dist = 0
-    height_step = 20
-    steps = 7
+
     last_dist_internal = [None]*steps
     last_trans_internal = [None]*steps
     for i in range(steps):
@@ -27,16 +26,26 @@ def find_curvy_edge(image, save=False, edge_thickness=1, last_dist=None, last_tr
                                                                                              save=save,
                                                                                              last_trans=last_trans_internal[i-1],
                                                                                              half_search_width=half_search_width,
-                                                                                             y1=window['height'] - bottom_dist - height_step,
-                                                                                             y2=window['height'] - bottom_dist,
+                                                                                             y1=window['height'] - bottom - height_step,
+                                                                                             y2=window['height'] - bottom,
                                                                                              step=i,
                                                                                              photo_time=photo_time)
-        bottom_dist += height_step
+        bottom += height_step
         if i == 0:
             last_dist = last_dist_internal[i]
             last_trans = last_trans_internal[i]
 
-    return last_dist, last_trans, max_diff, image_with_line
+    lane_borders = [None]*steps
+    lane_width = 300
+    lane_width_decrement_per_step = 25
+    for i in range(steps):
+        if last_trans_internal[i] is not None:
+            lane_borders[i] = (last_dist_internal[i] - lane_width, last_dist_internal[i])
+        else:
+            lane_borders[i] = (None, None)
+        lane_width -= lane_width_decrement_per_step
+
+    return last_dist, last_trans, max_diff, image_with_line, lane_borders
 
 
 def find_edge(image, save=False, edge_thickness=1, last_dist=None, last_trans=None, half_search_width=150,
@@ -95,7 +104,7 @@ def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last
     index_max = np.where(diff_col_sum == max_diff)
     trans_max = index_max[0][0] + max_translation_l
     # dst_max = index_max[1][0] - abs(max_translation_l)
-    dst_max = index_max[1][0]
+    dst_max = index_max[1][0] + max_translation_l
     dst_max = dst_max + x1
 
     line = Line(dst_max, 0, alpha=270, length=image.shape[0])
@@ -113,9 +122,7 @@ def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last
                + '_tra_' + str(int(trans_max)) + '_dst_' + str(int(dst_max)) + '_max_' + str(int(max_diff)) \
                + '_last_' + str(int(last_dist)) + '.png'
         path_dist = os.path.join(path, name)
-        Image.fromarray(image_with_line).save(path_dist)
-        # path_raw = path + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S') + '_raw' + '.png'
-        # Image.fromarray(image).save(path_raw)
+        # Image.fromarray(image_with_line).save(path_dist)
 
     if max_diff >= min_diff * height:
         return dst_max, trans_max, max_diff, image_with_line

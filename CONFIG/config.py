@@ -101,3 +101,10 @@ window_crop_margin = {
     'width': x_size + 2*x_margin,
     'height': y_size,
 }
+
+height_step = 20
+steps = 7
+bottom_dist = 0
+
+target_plate_distance = 100
+

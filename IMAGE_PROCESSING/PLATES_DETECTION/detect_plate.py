@@ -4,11 +4,12 @@ import os
 import cv2
 from PIL import Image
 
-from CONFIG.config import window_plates
+from CONFIG.config import window_plates, steps, height_step, bottom_dist
 from SUPPORT.process_results import prepare_dir
 
 
 def detect_plate(image):
+    plates_positions = []
     # # Set up the detector with default parameters.
     # detector = cv2.SimpleBlobDetector()
     # # Detect blobs.
@@ -57,8 +58,34 @@ def detect_plate(image):
                     image_name += '.png'
                     Image.fromarray(image).save(os.path.join(directory_path, image_name))
 
+                    plates_positions.append((x0, x1, y0, y1))
+
+
+
                     # cv2.imshow('cnt', im_with_count)
                     # cv2.waitKey(0)
+    return plates_positions
+
+
+def judge_plates_positions(plates_positions, lane_borders):
+    if len(plates_positions) > 0:
+        return None
+    plates_y = []
+    for plate_position in plates_positions:
+        plate_x = (plate_position[0] + plate_position[1]) // 2
+        plate_y = (plate_position[2] + plate_position[3]) // 2
+        bottom = bottom_dist    # todo: check if ok to change that value later (shallow copy)
+        for i in range(steps):
+            if lane_borders[i] is not None:
+                if bottom <= plate_y < bottom + height_step:
+                    if lane_borders[i][0] <= plate_x < lane_borders[i][1]:
+                        plates_y.append(plate_y)
+                bottom += height_step
+    if len(plates_y) > 0:
+        plate_y = min(plates_y)
+        return plate_y
+
+    return None
 
 
 if __name__ == '__main__':

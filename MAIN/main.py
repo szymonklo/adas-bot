@@ -4,20 +4,17 @@ import time
 import queue
 import keyboard
 
-import pandas as pd
 from PIL import Image
-from matplotlib import pyplot as plt
-import numpy as np
 
 from CC.cruise_control import change_speed
 from IMAGE_PROCESSING.CAPTURING.capture_image import capture_image
-from IMAGE_PROCESSING.PLATES_DETECTION.detect_plate import detect_plate
+from IMAGE_PROCESSING.PLATES_DETECTION.detect_plate import detect_plate, judge_plates_positions
 from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, prepare_sign_to_digits_recognition, \
     find_speed_limit
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed, init_speed, find_digit_images
 from IMAGE_PROCESSING.image_processing import process_image_to_array, process_image_to_grayscale, filter_image
 from CONFIG.config import window, window_speed, Keys, window_signs, RefDigitsPath, window_plates
-from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_edge
+from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_edge, find_curvy_edge
 from LC.lane_centering import apply_correction
 from SUPPORT.process_results import process_results_queue, process_signs_queue, prepare_dir
 
@@ -25,6 +22,7 @@ from SUPPORT.process_results import process_results_queue, process_signs_queue, 
 def run():
     target_speed = 50
     ref_digits, ref_digits_signs = init_ref_digits()
+    plate_distance = None
 
     while True:
         if keyboard.is_pressed('q'):
@@ -59,14 +57,17 @@ def run():
 
                 st_lc = time.time()
                 action_results = activate_assist(last_dist)
+                lane_borders = action_results[-1]
                 last_dist = action_results[2]
                 print(f'LC: {time.time() - st_lc}')
 
                 st_cc = time.time()
-                speed = activate_speed(target_speed, ref_digits)
+                speed = activate_speed(target_speed, ref_digits, plate_distance)
                 print(f'CC: {time.time() - st_cc}, speed: {speed}, target_speed: {target_speed}')
 
-                activate_plate()
+                st_acc = time.time()
+                plate_distance = activate_plate(lane_borders)
+                print(f'AC: {time.time() - st_acc}, plate_distance: {plate_distance}')
 
                 if results_queue.full():
                     results_queue.get()
@@ -100,34 +101,40 @@ def init_ref_digits():
     return ref_digits, ref_digits_signs
 
 
-def activate_plate():
+def activate_plate(lane_borders):
+    # lane width 300 (step 0)
+    # lane width 150 (step 6) -> -25/step
     captured_image = capture_image(window)
     processed_image = process_image_to_array(captured_image)
     processed_image = process_image_to_grayscale(processed_image)
-    detect_plate(processed_image)
+    plates_positions = detect_plate(processed_image)
+    plate_distance = judge_plates_positions(plates_positions, lane_borders)
+
+    return plate_distance
 
 
 def activate_assist(last_dist=None):
     captured_image = capture_image(window)
     processed_image = process_image_to_array(captured_image)
     processed_image = process_image_to_grayscale(processed_image)
-    dist, trans, diff, image_with_line = find_edge(processed_image, save=False, last_dist=last_dist)
+    # dist, trans, diff, image_with_line = find_edge(processed_image, save=False, last_dist=last_dist)
+    dist, trans, diff, image_with_line, lane_borders = find_curvy_edge(processed_image, save=False, last_dist=last_dist)
     if dist is not None:
         direction, time_s, dist_cor, degree_cor, change_cor = apply_correction(dist, trans, last_dist, simulate=False)
     else:
         dist_cor, degree_cor, change_cor, direction, time_s = None, None, None, None, None
 
-    return processed_image, image_with_line, dist, trans, diff, dist_cor, degree_cor, change_cor, direction, time_s
+    return processed_image, image_with_line, dist, trans, diff, dist_cor, degree_cor, change_cor, direction, time_s, lane_borders
 
 
-def activate_speed(target_speed, ref_digits):
+def activate_speed(target_speed, ref_digits, plate_distance):
     captured_image = capture_image(window_speed)
     processed_image = process_image_to_array(captured_image)
     processed_image = process_image_to_grayscale(processed_image)
     # binary_image = binarize(processed_image)
     # keyboard.press_and_release('esc')
     current_speed = find_current_speed(processed_image, ref_digits)
-    change_speed(target_speed, current_speed)
+    change_speed(target_speed, current_speed, plate_distance)
     return current_speed
 
 

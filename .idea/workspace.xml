@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="find_edge">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="max_translation l r">
+      <change beforePath="$PROJECT_DIR$/.idea/auto.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/auto.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC/cruise_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/CC/cruise_control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LC/lane_centering.py" beforeDir="false" afterPath="$PROJECT_DIR$/LC/lane_centering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +56,7 @@
       <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING\LINE_DETECTION" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.find_edge">
+  <component name="RunManager" selected="Python.main">
     <configuration name="detect_plate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -166,11 +171,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.find_edge" />
         <item itemvalue="Python.find_lines" />
         <item itemvalue="Python.perspective" />
         <item itemvalue="Python.detect_plate" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -288,7 +293,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625316454375</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="max_translation l r">
+      <created>1625520742199</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1625520742199</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -327,7 +339,8 @@
     <MESSAGE value="refactored" />
     <MESSAGE value="detect_plate" />
     <MESSAGE value="find_edge" />
-    <option name="LAST_COMMIT_MESSAGE" value="find_edge" />
+    <MESSAGE value="max_translation l r" />
+    <option name="LAST_COMMIT_MESSAGE" value="max_translation l r" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -402,22 +415,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>12</line>
+          <line>13</line>
           <option name="timeStamp" value="188" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>48</line>
+          <line>49</line>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>24</line>
+          <line>25</line>
           <option name="timeStamp" value="192" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>63</line>
+          <line>90</line>
           <option name="timeStamp" value="193" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -432,22 +445,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>160</line>
+          <line>167</line>
           <option name="timeStamp" value="203" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>166</line>
+          <line>173</line>
           <option name="timeStamp" value="204" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>144</line>
+          <line>151</line>
           <option name="timeStamp" value="205" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>105</line>
+          <line>114</line>
           <option name="timeStamp" value="207" />
         </line-breakpoint>
       </breakpoints>

@@ -24,7 +24,7 @@ def apply_correction(distance, degree, last_distance, simulate=False):
     change_correction = change_dist * 2 / 1000
 
     correction = dist_correction + degree_correction + change_correction
-    time_s = min(abs(correction), 0.05)
+    time_s = min(abs(correction), 0.08)
 
     if correction > 0:
         direction_key = Keys.right
