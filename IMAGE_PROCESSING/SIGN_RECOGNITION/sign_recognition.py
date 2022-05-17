@@ -11,6 +11,7 @@ from PIL import Image
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed, find_digit_images, find_speed_from_digit_images
 from IMAGE_PROCESSING.image_processing import filter_image2
 from SUPPORT.process_results import prepare_dir
+from ref_digits import init_ref_digits
 
 
 def find_circles(mask, image):
@@ -125,6 +126,8 @@ def prepare_sign_to_digits_recognition(image):
 
 def find_speed_limit(sign_image, ref_digits_signs):
     sign_image_filtered = prepare_sign_to_digits_recognition(sign_image)
+    if sign_image_filtered is None:
+        return None
     width = sign_image_filtered.shape[1]
     widths = int(0.15 * width), int(0.35 * width), int(0.4 * width), int(0.6 * width)
     digit_images_split_h = find_digit_images(sign_image_filtered, ref_digits={}, minimum_sum=int(0.2 * width), widths=widths)
@@ -146,7 +149,10 @@ def find_speed_limit(sign_image, ref_digits_signs):
 
 if __name__ == '__main__':
     path = r'C:\PROGRAMOWANIE\auto_data\photos\sr\2021-01-18\15_10_03'
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\sr\2021-07-08\19_58_02'
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\sr\2021-07-08\20_23_37'
     dists = []
+    ref_digits, ref_digits_signs = init_ref_digits()
     for path, subdir, files in os.walk(path):
         for file in files:
             if 'raw' in file:
@@ -154,6 +160,6 @@ if __name__ == '__main__':
                 image = cv2.imread(os.path.join(path, file))
                 # image_rgb = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
 
-                target_speed = find_speed_limit(image)
+                target_speed = find_speed_limit(image, ref_digits_signs)
                 # filtered_image = filter_image(image, debug=True)
                 print(f'F: {time.time() - st}')

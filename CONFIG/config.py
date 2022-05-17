@@ -5,9 +5,9 @@
 #     'height': 220,
 # }
 
-window = {
+window_line = {
     'left':   600,
-    'top':    460,
+    'top':    460-50-15,    # -15 to cut steering wheel
     'width':  980,
     'height': 220,
 }
@@ -28,7 +28,7 @@ window_plates = {
 # 2021-06-27 window 1920x1080
 window_speed = {
     'left':   1496,
-    'top':    770,
+    'top':    770 - 60,   # for window mode: 770-27, for 1080 full screen: 770-60
     'width':  30,
     'height': 18,
 }
@@ -54,14 +54,17 @@ class RefDigitsPath:
 
 # find_edge
 default_x1 = 379
-default_x2 = 679
+default_x2 = 679 + 100
 default_y1 = -60
+min_x1 = default_x1 - 100
 
-min_diff = 10   # 60 px -> diff thresh 600
+min_diff = 9   # 60 px -> diff thresh 600
 
 target_distance = 600
 target_degree = 66
 tolerance = 10
+
+min_line_search_half_width = 60
 
 
 class Keys:

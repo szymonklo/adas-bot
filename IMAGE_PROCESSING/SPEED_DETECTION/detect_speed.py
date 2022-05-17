@@ -7,18 +7,6 @@ import numpy as np
 from PIL import Image
 
 
-def init_speed(path):
-    ref_digits = {}
-    files = os.listdir(path)
-    for file in files:
-        image = cv2.imread(os.path.join(path, file))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        # image = image.astype(np.int16)
-        image = image.astype(np.uint8)
-        ref_digits.update({file[:-4]: image})
-    return ref_digits
-
-
 def find_current_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
     # if image.shape[0] != 18:
     # keyboard.press_and_release('esc')

@@ -1,34 +1,36 @@
 import datetime
 import os
-import time
 import queue
-import keyboard
+import time
 
+import keyboard
 from PIL import Image
 
 from CC.cruise_control import change_speed
+from CONFIG.config import window_line, window_speed, Keys, window_signs, window_plates
 from IMAGE_PROCESSING.CAPTURING.capture_image import capture_image
+from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_curvy_edge
 from IMAGE_PROCESSING.PLATES_DETECTION.detect_plate import detect_plate, judge_plates_positions
-from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, prepare_sign_to_digits_recognition, \
-    find_speed_limit
-from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed, init_speed, find_digit_images
+from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, find_speed_limit
+from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed
 from IMAGE_PROCESSING.image_processing import process_image_to_array, process_image_to_grayscale, filter_image
-from CONFIG.config import window, window_speed, Keys, window_signs, RefDigitsPath, window_plates
-from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_edge, find_curvy_edge
 from LC.lane_centering import apply_correction
-from SUPPORT.process_results import process_results_queue, process_signs_queue, prepare_dir
+from SUPPORT.process_results import process_line_queue, process_signs_queue, prepare_dir, process_plates_queue
+from ref_digits import init_ref_digits
 
 
 def run():
-    target_speed = 50
+    desired_speed = 50
     ref_digits, ref_digits_signs = init_ref_digits()
     plate_distance = None
 
     while True:
         if keyboard.is_pressed('q'):
-            results_queue = queue.Queue(50)
+            line_queue = queue.Queue(50)
             signs_queue = queue.Queue(50)
+            plates_queue = queue.Queue(50)
             last_dist = None
+            last_trans = None
             while True:
                 processed_image = None
                 if keyboard.is_pressed('z'):
@@ -37,8 +39,9 @@ def run():
                     keyboard.release(Keys.left)
                     keyboard.release(Keys.right)
                     # keyboard.press_and_release('esc')
-                    processed_image_deb = process_results_queue(results_queue, r'C:\PROGRAMOWANIE\auto_data\photos\lc')
+                    process_line_queue(line_queue, r'C:\PROGRAMOWANIE\auto_data\photos\lc')
                     process_signs_queue(signs_queue, r'C:\PROGRAMOWANIE\auto_data\photos\sr')
+                    process_plates_queue(plates_queue, r'C:\PROGRAMOWANIE\auto_data\photos\cc')
                     break
                 # todo - if 'a' or 'd' pressed turn off
                 # todo - if indicators pressed change line (turn off, arrow dir1 for 1 s, arrow dir2 for 1 s, turn on)
@@ -56,75 +59,65 @@ def run():
                         Image.fromarray(processed_image).save(os.path.join(directory_path, image_name))
 
                 st_lc = time.time()
-                action_results = activate_assist(last_dist)
-                lane_borders = action_results[-1]
-                last_dist = action_results[2]
+                steering_results = activate_steering(last_dist, last_trans)
+                lane_borders = steering_results[10]
+                last_dist = steering_results[2]
+                last_trans = steering_results[3]
                 print(f'LC: {time.time() - st_lc}')
 
                 st_cc = time.time()
-                speed = activate_speed(target_speed, ref_digits, plate_distance)
-                print(f'CC: {time.time() - st_cc}, speed: {speed}, target_speed: {target_speed}')
+                speed = activate_speed(desired_speed, ref_digits, plate_distance)
+                print(f'CC: {time.time() - st_cc}, speed: {speed}, target_speed: {desired_speed}')
 
                 st_acc = time.time()
-                plate_distance = activate_plate(lane_borders)
+                plate_distance, min_plate_x, img_with_contours_filtered = activate_plate(lane_borders)
                 print(f'AC: {time.time() - st_acc}, plate_distance: {plate_distance}')
 
-                if results_queue.full():
-                    results_queue.get()
-                results_queue.put(action_results)
+                if line_queue.full():
+                    line_queue.get()
+                line_queue.put(steering_results)
+
+                if plates_queue.full():
+                    plates_queue.get()
+                plates_queue.put((plate_distance, min_plate_x, img_with_contours_filtered))
 
                 st_sr = time.time()
                 signs_results = activate_signs(ref_digits_signs)
-                x, y, w, h, sign_image, target_speed_found = signs_results
-                if target_speed_found is not None:
-                    target_speed = target_speed_found
+                x, y, w, h, sign_image, desired_speed_found = signs_results
+                if desired_speed_found is not None:
+                    desired_speed = desired_speed_found
                     if signs_queue.full():
                         signs_queue.get()
                     signs_queue.put(signs_results)
-                print(f'SR: {time.time() - st_sr}, x: {x}, y: {y}, w: {w}, h: {h}, speed_limit: {target_speed_found}')
-
-
-def init_ref_digits():
-    ref_digits = init_speed(RefDigitsPath.cluster)
-    ref_digits_signs1 = init_speed(RefDigitsPath.signs)
-    ref_digits_signs = {}
-
-    for digit, ref_digits_sign1 in ref_digits_signs1.items():
-        width = ref_digits_sign1.shape[0]
-        if width != 15:
-            widths = 9, 18, int(0.4 * width), int(0.6 * width)
-            ref_digits_sign = find_digit_images(ref_digits_sign1, ref_digits={}, widths=widths, axis=1)
-            ref_digits_signs[digit] = ref_digits_sign[0]
-        else:
-            ref_digits_signs[digit] = ref_digits_sign1
-
-    return ref_digits, ref_digits_signs
+                print(f'SR: {time.time() - st_sr}, x: {x}, y: {y}, w: {w}, h: {h}, speed_limit: {desired_speed_found}')
 
 
 def activate_plate(lane_borders):
     # lane width 300 (step 0)
     # lane width 150 (step 6) -> -25/step
-    captured_image = capture_image(window)
+    captured_image = capture_image(window_line)
     processed_image = process_image_to_array(captured_image)
     processed_image = process_image_to_grayscale(processed_image)
-    plates_positions = detect_plate(processed_image)
-    plate_distance = judge_plates_positions(plates_positions, lane_borders)
+    plates_positions, img_with_contours_filtered = detect_plate(processed_image)
+    plate_distance, min_plate_x = judge_plates_positions(plates_positions, lane_borders, image=processed_image)
 
-    return plate_distance
+    return plate_distance, min_plate_x, img_with_contours_filtered
 
 
-def activate_assist(last_dist=None):
-    captured_image = capture_image(window)
+def activate_steering(last_dist=None, last_trans=None):
+    captured_image = capture_image(window_line)
     processed_image = process_image_to_array(captured_image)
     processed_image = process_image_to_grayscale(processed_image)
     # dist, trans, diff, image_with_line = find_edge(processed_image, save=False, last_dist=last_dist)
-    dist, trans, diff, image_with_line, lane_borders = find_curvy_edge(processed_image, save=False, last_dist=last_dist)
-    if dist is not None:
+    dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(processed_image, save=False,
+                                                                                          last_dist=last_dist,
+                                                                                          last_trans=last_trans)
+    if edge_found_status:
         direction, time_s, dist_cor, degree_cor, change_cor = apply_correction(dist, trans, last_dist, simulate=False)
     else:
-        dist_cor, degree_cor, change_cor, direction, time_s = None, None, None, None, None
+        direction, time_s, dist_cor, degree_cor, change_cor = None, None, None, None, None
 
-    return processed_image, image_with_line, dist, trans, diff, dist_cor, degree_cor, change_cor, direction, time_s, lane_borders
+    return processed_image, image_with_line, dist, trans, diff, dist_cor, degree_cor, change_cor, direction, time_s, lane_borders, edge_found_status
 
 
 def activate_speed(target_speed, ref_digits, plate_distance):

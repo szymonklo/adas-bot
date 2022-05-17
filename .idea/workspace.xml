@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="max_translation l r">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="acc">
+      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/DRAWING/draw.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/ref_digits/ref_digits.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/auto.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/auto.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CC/cruise_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/CC/cruise_control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LC/lane_centering.py" beforeDir="false" afterPath="$PROJECT_DIR$/LC/lane_centering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,27 +61,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
-    <configuration name="detect_plate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="auto" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="find_edge" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -162,20 +145,41 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="sign_recognition" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="auto" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Python.detect_plate" />
+      <item itemvalue="Python.find_edge" />
+      <item itemvalue="Python.find_lines" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.perspective" />
-      <item itemvalue="Python.find_lines" />
-      <item itemvalue="Python.find_edge" />
+      <item itemvalue="Python.sign_recognition" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
         <item itemvalue="Python.find_edge" />
+        <item itemvalue="Python.sign_recognition" />
         <item itemvalue="Python.find_lines" />
         <item itemvalue="Python.perspective" />
-        <item itemvalue="Python.detect_plate" />
       </list>
     </recent_temporary>
   </component>
@@ -300,7 +304,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625520742199</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="acc">
+      <created>1625606679829</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1625606679829</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -340,19 +351,20 @@
     <MESSAGE value="detect_plate" />
     <MESSAGE value="find_edge" />
     <MESSAGE value="max_translation l r" />
-    <option name="LAST_COMMIT_MESSAGE" value="max_translation l r" />
+    <MESSAGE value="acc" />
+    <option name="LAST_COMMIT_MESSAGE" value="acc" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>24</line>
+          <line>25</line>
           <option name="timeStamp" value="141" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>113</line>
+          <line>114</line>
           <option name="timeStamp" value="142" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -377,12 +389,12 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>80</line>
+          <line>81</line>
           <option name="timeStamp" value="159" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>150</line>
+          <line>138</line>
           <option name="timeStamp" value="160" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -399,39 +411,29 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>35</line>
+          <line>23</line>
           <option name="timeStamp" value="172" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="digit_images == []" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py</url>
-          <line>118</line>
+          <line>106</line>
           <option name="timeStamp" value="178" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
-          <line>34</line>
+          <line>60</line>
           <option name="timeStamp" value="182" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>13</line>
+          <line>14</line>
           <option name="timeStamp" value="188" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>49</line>
+          <line>50</line>
           <option name="timeStamp" value="191" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>25</line>
-          <option name="timeStamp" value="192" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>90</line>
-          <option name="timeStamp" value="193" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/perspective.py</url>
@@ -445,23 +447,61 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>167</line>
-          <option name="timeStamp" value="203" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>173</line>
+          <line>203</line>
           <option name="timeStamp" value="204" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
+          <line>130</line>
+          <option name="timeStamp" value="209" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/DRAWING/draw.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="210" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>151</line>
-          <option name="timeStamp" value="205" />
+          <line>94</line>
+          <option name="timeStamp" value="227" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
-          <line>114</line>
-          <option name="timeStamp" value="207" />
+          <line>110</line>
+          <option name="timeStamp" value="232" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>159</line>
+          <option name="timeStamp" value="233" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="238" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <condition expression="len(obj) == 0" language="Python" />
+          <url>file://$PROJECT_DIR$/venv/Lib/site-packages/numpy/core/fromnumeric.py</url>
+          <line>57</line>
+          <option name="timeStamp" value="239" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <condition expression="file.split('_')[0] in ['38', '39', '40']" language="Python" />
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>140</line>
+          <option name="timeStamp" value="240" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <condition disabled="true" expression="file.split('_')[0] in ['38', '39', '40']" language="Python" />
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="241" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py</url>
+          <line>143</line>
+          <option name="timeStamp" value="242" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -6,53 +6,67 @@ import numpy as np
 from PIL import Image
 from math import sin, cos, pi
 
-from CONFIG.config import target_distance, target_degree, min_diff, default_y1, default_x1, default_x2, window, steps, \
-    height_step, bottom_dist
+from CONFIG.config import target_distance, min_diff, default_y1, default_x1, default_x2, window_line, steps, \
+    height_step, bottom_dist, min_line_search_half_width, min_x1
 
 
 def find_curvy_edge(image, save=False, edge_thickness=1, last_dist=None, last_trans=None, half_search_width=150,
-              right_margin=300, y1=default_y1, y2=window['height'], bottom=bottom_dist):
+                    right_margin=300, y1=default_y1, y2=window_line['height'], bottom=bottom_dist, file=None):
+    # todo - add second edge as verification
     photo_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:-5]
 
-    last_dist_internal = [None]*steps
-    last_trans_internal = [None]*steps
+    last_dist_internal = [None] * steps
+    last_trans_internal = [None] * steps
+    lane_borders = [(0, 0)] * steps
+    lane_width = 300
+    lane_width_decrement_per_step = 25
+    edge_found_statuses = [False] * steps
+    images_with_line_internal = [None] * steps
+    first_result_index_found = False
+    first_result_index = 0
     for i in range(steps):
         if last_trans is not None:
             # half_search_width = last_trans // 4
             half_search_width = height_step * 2
-        last_dist_internal[i], last_trans_internal[i], max_diff, image_with_line = find_edge(image,
-                                                                                             edge_thickness=edge_thickness,
-                                                                                             last_dist=last_dist_internal[i-1],
-                                                                                             save=save,
-                                                                                             last_trans=last_trans_internal[i-1],
-                                                                                             half_search_width=half_search_width,
-                                                                                             y1=window['height'] - bottom - height_step,
-                                                                                             y2=window['height'] - bottom,
-                                                                                             step=i,
-                                                                                             photo_time=photo_time)
+            if i == 0:
+                half_search_width = height_step * 6     # 4 was too low when engaging at curve
+        if last_dist is not None:
+            last_dist -= lane_width_decrement_per_step
+        find_edge_results = find_edge(image, edge_thickness=edge_thickness, last_dist=last_dist,
+                                      save=save, last_trans=last_trans,
+                                      half_search_width=half_search_width, y1=window_line['height'] - bottom - height_step,
+                                      y2=window_line['height'] - bottom, step=i, photo_time=photo_time, file=file)
+        last_dist_internal[i], last_trans_internal[i], max_diff, images_with_line_internal[i], edge_found_statuses[
+            i] = find_edge_results
         bottom += height_step
-        if i == 0:
-            last_dist = last_dist_internal[i]
-            last_trans = last_trans_internal[i]
-
-    lane_borders = [None]*steps
-    lane_width = 300
-    lane_width_decrement_per_step = 25
-    for i in range(steps):
-        if last_trans_internal[i] is not None:
-            lane_borders[i] = (last_dist_internal[i] - lane_width, last_dist_internal[i])
-        else:
-            lane_borders[i] = (None, None)
         lane_width -= lane_width_decrement_per_step
+        last_dist = last_dist_internal[i]
+        last_trans = last_trans_internal[i]
 
-    return last_dist, last_trans, max_diff, image_with_line, lane_borders
+        if edge_found_statuses[i]:
+            if first_result_index_found is False:
+                first_result_index_found = True
+                first_result_index = i
+            right = find_edge_results[0]
+            lane_borders[i] = (right - lane_width, right)
+            last_dist_internal[i] += lane_width_decrement_per_step * i
+        else:
+            lane_borders[i] = (0, 0)
+
+    result_index = first_result_index
+    last_dist = last_dist_internal[result_index]
+    last_trans = last_trans_internal[result_index]
+    edge_found_status = edge_found_statuses[result_index]
+    image_with_line = images_with_line_internal[result_index]
+
+    return last_dist, last_trans, max_diff, image_with_line, lane_borders, edge_found_status
 
 
 def find_edge(image, save=False, edge_thickness=1, last_dist=None, last_trans=None, half_search_width=150,
-              right_margin=300, y1=default_y1, y2=window['height'], step='', photo_time='time'):
+              right_margin=300, y1=default_y1, y2=window_line['height'], step=None, photo_time='time', file=None):
     if last_dist is not None:
         if last_trans is not None:
-            half_search_width = 2 * last_trans
+            half_search_width = max(2 * last_trans, min_line_search_half_width)
             x1 = min(last_dist - half_search_width - last_trans, image.shape[1] - right_margin)
             x2 = min(last_dist + half_search_width - last_trans, image.shape[1])
         else:
@@ -62,14 +76,17 @@ def find_edge(image, save=False, edge_thickness=1, last_dist=None, last_trans=No
         last_dist = None
         x1 = default_x1
         x2 = default_x2
+    x1 = max(min_x1, x1)     # fix after debug
     # y1 = default_y1
     # y2 = image.shape[0]
-    dst_max, trans_max, max_diff, image_with_line \
-        = find_edge_internal(image, x1, x2, y1, y2, save=save, edge_thickness=edge_thickness, last_dist=last_dist, step=step, last_trans=last_trans, photo_time=photo_time)
-    return dst_max, trans_max, max_diff, image_with_line
+    dst_max, trans_max, max_diff, image_with_line, edge_internal_found \
+        = find_edge_internal(image, x1, x2, y1, y2, save=save, edge_thickness=edge_thickness, last_dist=last_dist,
+                             step=step, last_trans=last_trans, photo_time=photo_time, file=file)
+    return dst_max, trans_max, max_diff, image_with_line, edge_internal_found
 
 
-def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last_dist=None, step='', last_trans=None, photo_time='time'):
+def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last_dist=None, step=None, last_trans=None,
+                       photo_time='time', file=None):
     line_h1 = Line(x1=x1, y1=y1, x2=x2, y2=y1)
     line_h2 = Line(x1=x1, y1=y2, x2=x2, y2=y2)
     line_v1 = Line(x1=x1, y1=y1, x2=x1, y2=y2)
@@ -82,19 +99,30 @@ def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last
     if edge_thickness != 1:
         right = image_int[:, edge_thickness:]
         left = image_int[:, :- edge_thickness]
-        diff = right - left
+        diff_0 = right - left
     else:
-        diff = np.diff(image_int)
-    # diff_normalized = normalize(diff)
+        diff_0 = np.diff(image_int)
+    try:
+
+        percentile = np.percentile(diff_0, [0.5, 99.5]).astype(np.int32)
+        diff_cut_1 = np.where(diff_0 > min(percentile), diff_0, min(percentile))
+        diff_cut_2 = np.where(diff_cut_1 < max(percentile), diff_cut_1, max(percentile))
+        diff = diff_cut_2
+        diff_normalized = normalize(diff)
+    except Exception as e:
+        print(f'x1: {x1}, x2: {x2}, y1: {y1}, y2: {y2}')
+        print(f'diff_shape: {diff_0.shape}')
+        raise e
 
     height = image_int.shape[0]
     if last_trans is not None:
         max_translation_r = last_trans + height // 2
         max_translation_l = last_trans - height // 2
     else:
-        max_translation_r = height*2
+        max_translation_r = height * 2
         max_translation_l = -height * 2
-    diff_col_sum = diff_col_sum_for_trans(diff, height=height, max_translation_l=max_translation_l, max_translation_r=max_translation_r)
+    diff_col_sum = diff_col_sum_for_trans(diff, height=height, max_translation_l=max_translation_l,
+                                          max_translation_r=max_translation_r)
 
     # repeated for debug
     diff_col_sum_normalized = normalize(diff_col_sum)
@@ -104,7 +132,7 @@ def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last
     index_max = np.where(diff_col_sum == max_diff)
     trans_max = index_max[0][0] + max_translation_l
     # dst_max = index_max[1][0] - abs(max_translation_l)
-    dst_max = index_max[1][0] + max_translation_l
+    dst_max = index_max[1][0]   # + max_translation_l # why was + max_translation?
     dst_max = dst_max + x1
 
     line = Line(dst_max, 0, alpha=270, length=image.shape[0])
@@ -117,17 +145,21 @@ def find_edge_internal(image, x1, x2, y1, y2, save=False, edge_thickness=1, last
 
     if save:
         path = r'C:\PROGRAMOWANIE\auto_data\photos\find_edge_debug'
-        name = photo_time \
+        if file is not None:
+            name = file + '_'
+        else:
+            name = ''
+        name += photo_time \
                + '_' + str(step) \
                + '_tra_' + str(int(trans_max)) + '_dst_' + str(int(dst_max)) + '_max_' + str(int(max_diff)) \
                + '_last_' + str(int(last_dist)) + '.png'
         path_dist = os.path.join(path, name)
-        # Image.fromarray(image_with_line).save(path_dist)
+        Image.fromarray(image_with_line).save(path_dist)
 
     if max_diff >= min_diff * height:
-        return dst_max, trans_max, max_diff, image_with_line
+        return dst_max, trans_max, max_diff, image_with_line, True
     else:
-        return None, None, None, None
+        return dst_max, trans_max, max_diff, image_with_line, False
 
 
 def diff_col_sum_for_trans(diff, height, max_translation_l, max_translation_r):
@@ -229,25 +261,28 @@ class Rectangle:
         self.length = self.x_max - self.x_min
         self.width = self.y_max - self.y_min
 
+    def draw_retangle(self, image_referential):
+        ...
+
 
 if __name__ == '__main__':
-    path = r'C:\PROGRAMOWANIE\auto_data\photos\2021-01-13\20_10_03'
-    path = r'C:\PROGRAMOWANIE\auto_data\photos\lc\2021-06-30\22_37_20'
-    last_dist = 500
-    last_dist = None
-    last_trans = None
-    half_search_width = 150
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\lc\2022-05-17\18_53_40'
 
     dists = []
+    dist = None
+    trans = None
     for path, subdir, files in os.walk(path):
         for file in files:
             if 'raw' in file:
                 st = time.time()
                 image = cv2.imread(os.path.join(path, file))
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                find_curvy_edge(image, save=True, edge_thickness=1, last_dist=None, last_trans=None,
-                                half_search_width=150,
-                                right_margin=300, y1=default_y1, y2=window['height'])
+                dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(image,
+                                                                                                      last_dist=dist,
+                                                                                                      last_trans=trans,
+                                                                                                      save=False,
+                                                                                                      file=file
+                                                                                                      )
                 print(f'E2: {time.time() - st}')
 
     pass

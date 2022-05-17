@@ -61,7 +61,10 @@ def filter_image(image, debug=False):
 
 
 def filter_image2(image, lower_hsv, upper_hsv, debug=False):
-    hsv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2HSV)
+    try:
+        hsv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2HSV)
+    except Exception as e:
+        return None, None, None     # todo
 
     if debug is True:
         h = hsv[:, :, 0]

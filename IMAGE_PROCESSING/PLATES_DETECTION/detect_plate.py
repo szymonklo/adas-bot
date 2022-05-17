@@ -6,6 +6,7 @@ from PIL import Image
 
 from CONFIG.config import window_plates, steps, height_step, bottom_dist
 from SUPPORT.process_results import prepare_dir
+from draw import draw_lane_and_plates
 
 
 def detect_plate(image):
@@ -28,7 +29,7 @@ def detect_plate(image):
 
     image_color = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     img = copy.deepcopy(image_color)
-    img = cv2.drawContours(img, contours_filtered, -1, (0, 255, 0), 1)
+    img_with_contours_filtered = cv2.drawContours(img, contours_filtered, -1, (0, 255, 0), 1)
     # cv2.imshow('cnt', img)
     # cv2.waitKey(0)
 
@@ -60,32 +61,34 @@ def detect_plate(image):
 
                     plates_positions.append((x0, x1, y0, y1))
 
-
-
                     # cv2.imshow('cnt', im_with_count)
                     # cv2.waitKey(0)
-    return plates_positions
+    return plates_positions, img_with_contours_filtered
 
 
-def judge_plates_positions(plates_positions, lane_borders):
+def judge_plates_positions(plates_positions, lane_borders, image=None):
     if len(plates_positions) > 0:
-        return None
-    plates_y = []
+        return None, None
+    min_plate_y = 1000
+    min_plate_x = 1000
     for plate_position in plates_positions:
         plate_x = (plate_position[0] + plate_position[1]) // 2
         plate_y = (plate_position[2] + plate_position[3]) // 2
         bottom = bottom_dist    # todo: check if ok to change that value later (shallow copy)
-        for i in range(steps):
-            if lane_borders[i] is not None:
+        for lane_border in lane_borders:
+            if lane_border is not None:
                 if bottom <= plate_y < bottom + height_step:
-                    if lane_borders[i][0] <= plate_x < lane_borders[i][1]:
-                        plates_y.append(plate_y)
+                    if lane_border[0] <= plate_x < lane_border[1]:
+                        if plate_y < min_plate_y:
+                            min_plate_y = plate_y
+                            min_plate_x = plate_x
                 bottom += height_step
-    if len(plates_y) > 0:
-        plate_y = min(plates_y)
-        return plate_y
+    if min_plate_y != 1000:
+        if image is not None:
+            draw_lane_and_plates(plates_positions, lane_borders, image, min_plate_y, min_plate_x)
+        return min_plate_y, min_plate_x
 
-    return None
+    return None, None
 
 
 if __name__ == '__main__':
