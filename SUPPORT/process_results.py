@@ -75,11 +75,28 @@ def process_plates_queue(plates_queue, path):
     while not plates_queue.empty():
         # keyboard.press_and_release('esc')
         plate_distance, min_plate_x, img_with_contours_filtered = plates_queue.get()
-        if True is not None:
-            image_name = str(num).zfill(2) \
-                         + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
-                         + '.png'
-            Image.fromarray(img_with_contours_filtered).save(os.path.join(directory_path, image_name))
+        image_name = str(num).zfill(2) \
+                     + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
+                     + '.png'
+        Image.fromarray(img_with_contours_filtered).save(os.path.join(directory_path, image_name))
+        num += 1
+
+
+def process_rejected_queue(rejected_queue, path):
+    directory_path = prepare_dir(path)
+    num = 0
+    while not rejected_queue.empty():
+        image_name, image = rejected_queue.get()
+        Image.fromarray(image).save(os.path.join(directory_path, str(num).zfill(2) + image_name))
+        num += 1
+
+
+def process_digits_queue(digits_queue, path):
+    directory_path = prepare_dir(path)
+    num = 0
+    while not digits_queue.empty():
+        image_name, image = digits_queue.get()
+        Image.fromarray(image).save(os.path.join(directory_path, str(num).zfill(2) + image_name))
         num += 1
 
 

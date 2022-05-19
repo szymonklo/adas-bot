@@ -15,7 +15,8 @@ from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, fin
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed
 from IMAGE_PROCESSING.image_processing import process_image_to_array, process_image_to_grayscale, filter_image
 from LC.lane_centering import apply_correction
-from SUPPORT.process_results import process_line_queue, process_signs_queue, prepare_dir, process_plates_queue
+from SUPPORT.process_results import process_line_queue, process_signs_queue, prepare_dir, process_plates_queue, \
+    process_rejected_queue, process_digits_queue
 from ref_digits import init_ref_digits
 
 
@@ -25,10 +26,13 @@ def run():
     plate_distance = None
 
     while True:
+        print('waiting for a key')
         if keyboard.is_pressed('q'):
             line_queue = queue.Queue(50)
             signs_queue = queue.Queue(50)
             plates_queue = queue.Queue(50)
+            rejected_queue = queue.Queue(50)
+            digit_queue = queue.Queue(50)
             last_dist = None
             last_trans = None
             while True:
@@ -42,6 +46,9 @@ def run():
                     process_line_queue(line_queue, r'C:\PROGRAMOWANIE\auto_data\photos\lc')
                     process_signs_queue(signs_queue, r'C:\PROGRAMOWANIE\auto_data\photos\sr')
                     process_plates_queue(plates_queue, r'C:\PROGRAMOWANIE\auto_data\photos\cc')
+                    process_rejected_queue(rejected_queue, r'C:\PROGRAMOWANIE\auto_data\photos\rejected_circles')
+                    process_digits_queue(digit_queue, r'C:\PROGRAMOWANIE\auto_data\photos\sign_digits')
+                    print('saving completed')
                     break
                 # todo - if 'a' or 'd' pressed turn off
                 # todo - if indicators pressed change line (turn off, arrow dir1 for 1 s, arrow dir2 for 1 s, turn on)
@@ -83,12 +90,23 @@ def run():
 
                 st_sr = time.time()
                 signs_results = activate_signs(ref_digits_signs)
-                x, y, w, h, sign_image, desired_speed_found = signs_results
+                x, y, w, h, sign_image, desired_speed_found, rejected, result_images_list = signs_results
+
+                if rejected:
+                    for rejected_circle in rejected:
+                        if rejected_queue.full():
+                            rejected_queue.get()
+                        rejected_queue.put(rejected_circle)
+                if result_images_list:
+                    for digit_image in result_images_list:
+                        if digit_queue.full():
+                            digit_queue.get()
+                        digit_queue.put(digit_image)
                 if desired_speed_found is not None:
                     desired_speed = desired_speed_found
                     if signs_queue.full():
                         signs_queue.get()
-                    signs_queue.put(signs_results)
+                    signs_queue.put(signs_results[:-2])
                 print(f'SR: {time.time() - st_sr}, x: {x}, y: {y}, w: {w}, h: {h}, speed_limit: {desired_speed_found}')
 
 
@@ -126,7 +144,7 @@ def activate_speed(target_speed, ref_digits, plate_distance):
     processed_image = process_image_to_grayscale(processed_image)
     # binary_image = binarize(processed_image)
     # keyboard.press_and_release('esc')
-    current_speed = find_current_speed(processed_image, ref_digits)
+    current_speed, result_images_list = find_current_speed(processed_image, ref_digits)
     change_speed(target_speed, current_speed, plate_distance)
     return current_speed
 
@@ -136,14 +154,15 @@ def activate_signs(ref_digits_signs):
     # keyboard.press_and_release('esc')
     processed_image = process_image_to_array(captured_image)
     mask, image = filter_image(processed_image)
-    x, y, w, h, sign_image = find_circles(mask, image)
+    x, y, w, h, sign_image, rejected = find_circles(mask, image)
     # sign_image = image[y: y + h, x: x + w, :]
     # binary_image = binarize(processed_image)
     # keyboard.press_and_release('esc')
     target_speed = None
+    result_images_list = []
     if sign_image is not None:
-        target_speed = find_speed_limit(sign_image, ref_digits_signs)
-    return x, y, w, h, sign_image, target_speed
+        target_speed, result_images_list = find_speed_limit(sign_image, ref_digits_signs)
+    return x, y, w, h, sign_image, target_speed, rejected, result_images_list
 
 
 # def activate_assist_n_times(num=1):

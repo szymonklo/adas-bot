@@ -7,6 +7,7 @@ from PIL import Image
 from CONFIG.config import window_plates, steps, height_step, bottom_dist
 from SUPPORT.process_results import prepare_dir
 from draw import draw_lane_and_plates
+from find_edge import find_curvy_edge
 
 
 def detect_plate(image):
@@ -67,8 +68,8 @@ def detect_plate(image):
 
 
 def judge_plates_positions(plates_positions, lane_borders, image=None):
-    if len(plates_positions) > 0:
-        return None, None
+    # if len(plates_positions) > 0:
+    #     return None, None
     min_plate_y = 1000
     min_plate_x = 1000
     for plate_position in plates_positions:
@@ -92,12 +93,27 @@ def judge_plates_positions(plates_positions, lane_borders, image=None):
 
 
 if __name__ == '__main__':
-    path = r'C:\PROGRAMOWANIE\auto_data\photos\plates\2021-06-30'
+    # path = r'C:\PROGRAMOWANIE\auto_data\photos\plates\2022-05-19'
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\lc\2022-05-19\19_44_25'
+
+    dists = []
+    dist = None
+    trans = None
     for path, subdir, files in os.walk(path):
         for file in files:
-            if file.endswith('.png') and 'ratio' not in file:
+            if 'raw' in file:
+    # for path, subdir, files in os.walk(path):
+    #     for file in files:
+    #         if file.endswith('.png') and 'ratio' not in file:
                 image = cv2.imread(os.path.join(path, file))
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                 # image = image[window_plates['top']: window_plates['top'] + window_plates['height'],
                 #         window_plates['left']: window_plates['left'] + window_plates['width']]
-                detect_plate(image)
+                dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(image,
+                                                                                                      save=False,
+                                                                                                      last_dist=dist,
+                                                                                                      last_trans=trans)
+                plates_positions, img_with_contours_filtered = detect_plate(image)
+                plate_distance, min_plate_x = judge_plates_positions(plates_positions, lane_borders,
+                                                                     image=image)
+                pass

@@ -74,7 +74,7 @@ class Keys:
     down = 's'
 
 
-speed_tolerance_up = 5
+speed_tolerance_up = 6
 
 x_margin = 200
 x_min = 620

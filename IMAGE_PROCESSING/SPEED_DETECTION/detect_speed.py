@@ -11,17 +11,20 @@ def find_current_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0)
     # if image.shape[0] != 18:
     # keyboard.press_and_release('esc')
     digit_images = find_digit_images(image, ref_digits, minimum_sum=minimum_sum, widths=widths, axis=axis)
-    speed = find_speed_from_digit_images(digit_images, ref_digits, axis=axis, minimum=0)
-    return speed
+    speed, result_images_list = find_speed_from_digit_images(digit_images, ref_digits, axis=axis, minimum=0)
+    return speed, result_images_list
 
 
 def find_speed_from_digit_images(digit_images, ref_digits, axis=1, minimum=10):
 
     digits = ['']
+    result_images_list = []
     for i, digit_image in enumerate(digit_images):
         # todo - if 2nd of 2 digits or 3rd of 3 digits not detected -> assume 0
         # keyboard.press_and_release('esc')
-        digit = find_digit(digit_image, ref_digits, axis=axis)
+        digit, result_image_set = find_digit(digit_image, ref_digits, axis=axis)
+        if result_image_set:
+            result_images_list.append(result_image_set)
         if digit is not None:
             if digit in '0123456789':
                 digits.append(digit)
@@ -35,8 +38,8 @@ def find_speed_from_digit_images(digit_images, ref_digits, axis=1, minimum=10):
         if speed >= minimum:
             # print(speed)
             # keyboard.press_and_release('esc')
-            return speed
-    return None
+            return speed, result_images_list
+    return None, result_images_list
 
 
 def find_digit_images(image, ref_digits, minimum_sum=None, widths=None, axis=0):
@@ -128,22 +131,25 @@ def find_limits(x_sum, minimum_sum, min_width, first_index=1, last_index=-1):
 # 122, 102, 92, 87(67), 86(30, 60), 85(65, 35), 84(34),
 def find_digit(digit_image, ref_digits, axis=0):
     # todo 2021-06-27:  after debug move astype(int) outside
+    result_image_set = set()
+    height, width = digit_image.shape
     diffs = {}
     # minimum = ('-1', 255 * digit_image.shape[0] * digit_image.shape[1])
     minimum = ('-1', 10000)
     mini = []
-    if digit_image.shape[0] != ref_digits['0'].shape[0]:
+    if height != ref_digits['0'].shape[0]:
         # digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[0], int(digit_image.shape[1] * ref_digits['0'].shape[0] / digit_image.shape[0])))
-        digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[1], ref_digits['0'].shape[0]))
+        digit_image = cv2.resize(digit_image, (ref_digits['0'].shape[0] * width // height, ref_digits['0'].shape[0]))
+    height, width = digit_image.shape
     for digit, image in ref_digits.items():
-        if digit_image.shape[1] == image.shape[1]:
+        if width == image.shape[1]:
             # print(np.sum(abs(image.astype(int) - digit_image.astype(int))))
             diffs[digit] = np.sum(abs(image.astype(int) - digit_image.astype(int)))
             if diffs[digit] < minimum[1]:
                 minimum = (digit, diffs[digit])
     if minimum[1] > 2000:
         for digit, image in ref_digits.items():
-            if digit_image.shape[1] + 1 == image.shape[1]:
+            if width + 1 == image.shape[1]:
                 diffs_1 = np.sum(abs(image[:, :-1].astype(int) - digit_image.astype(int)))
                 diffs_2 = np.sum(abs(image[:, 1:].astype(int) - digit_image.astype(int)))
                 diffs[digit] = min(diffs_1, diffs_2)
@@ -151,7 +157,7 @@ def find_digit(digit_image, ref_digits, axis=0):
                     minimum = (digit, diffs[digit])
     if minimum[1] > 2000:
         for digit, image in ref_digits.items():
-            if digit_image.shape[1] - 1 == image.shape[1]:
+            if width - 1 == image.shape[1]:
                 diffs_1 = np.sum(abs(image.astype(int) - digit_image[:, :-1].astype(int)))
                 diffs_2 = np.sum(abs(image.astype(int) - digit_image[:, 1:].astype(int)))
                 diffs[digit] = min(diffs_1, diffs_2)
@@ -159,13 +165,14 @@ def find_digit(digit_image, ref_digits, axis=0):
                     minimum = (digit, diffs[digit])
         # keyboard.press_and_release('esc')
         d=1
+    image_name = 'sum' + str(minimum[1]) + 'dig' + minimum[0] + '.png'
+    # path = r'C:\PROGRAMOWANIE\auto_data\photos\sign_digits\\' + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S')\
+    #        + image_name
 
-    path = r'C:\PROGRAMOWANIE\auto_data\photos\sign_digits\\' + datetime.datetime.now().strftime('%Y-%m-%d-%H_%M_%S')\
-           + 'sum' + str(minimum[1]) + 'dig' + minimum[0] + '.png'
-
-    if digit_image.shape[0] != 18:#len(ref_digits) < 10:
-        Image.fromarray(digit_image).save(path)
+    if height != 18:    #len(ref_digits) < 10:
+        result_image_set = (image_name, digit_image)
+    #     Image.fromarray(digit_image).save(path)
     if minimum[0] != '-1' and minimum[1] < 10000:
-        return minimum[0]
+        return minimum[0], result_image_set
     else:
-        return None
+        return None, result_image_set

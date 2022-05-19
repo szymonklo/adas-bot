@@ -13,11 +13,14 @@ def init_ref_digits():
     ref_digits_signs = {}
 
     for digit, ref_digits_sign1 in ref_digits_signs1.items():
-        width = ref_digits_sign1.shape[0]
-        if width != 15:
-            widths = 9, 18, int(0.4 * width), int(0.6 * width)
-            ref_digits_sign = find_digit_images(ref_digits_sign1, ref_digits={}, widths=widths, axis=1)
-            ref_digits_signs[digit] = ref_digits_sign[0]
+        height, width = ref_digits_sign1.shape
+        if height != 15:
+            digit_image = cv2.resize(ref_digits_sign1, (15 * width // height, 15))
+            # widths = 9, 18, int(0.4 * height), int(0.6 * height)
+            # widths = int(0.08 * width), int(0.35 * width), int(0.4 * width), int(0.6 * width)
+            # ref_digits_sign = find_digit_images(ref_digits_sign1, ref_digits={}, widths=widths, axis=1)
+            # ref_digits_signs[digit] = ref_digits_sign[0]
+            ref_digits_signs[digit] = digit_image
         else:
             ref_digits_signs[digit] = ref_digits_sign1
 
