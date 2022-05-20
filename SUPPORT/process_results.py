@@ -1,7 +1,5 @@
 import datetime
 import os
-
-import keyboard
 from PIL import Image
 
 
@@ -23,7 +21,7 @@ def process_line_queue(results_queue, path):
     directory_path = prepare_dir(path)
     num = 0
     while not results_queue.empty():
-        processed_image, image_with_line, dist, trans, diff, dist_cor, trans_cor, change_cor, direction, time_s, lane_borders, edge_found_status = results_queue.get()
+        last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = results_queue.get()
         if dist is None:
             dist = 0
         if processed_image is not None:
@@ -38,11 +36,6 @@ def process_line_queue(results_queue, path):
                              + '_dst_' + safe_str(dist) \
                              + '_tra_' + safe_str(trans) \
                              + '_dif_' + safe_str(diff) \
-                             + '_dstC_' + safe_str(dist_cor) \
-                             + '_traC_' + safe_str(trans_cor) \
-                             + '_chaC_' + safe_str(change_cor) \
-                             + '_dir_' + safe_str(direction) \
-                             + '_tim_' + safe_str(time_s) \
                              + '.png'
             except TypeError as e:
                 print(e)
@@ -50,35 +43,32 @@ def process_line_queue(results_queue, path):
                              + '.png'
             Image.fromarray(image_with_line).save(os.path.join(directory_path, image_name))
         num += 1
-    return processed_image
-
-
-def process_signs_queue(signs_queue, path):
-    directory_path = prepare_dir(path)
-    num = 0
-    while not signs_queue.empty():
-        # keyboard.press_and_release('esc')
-        x, y, w, h, sign_image, target_speed = signs_queue.get()
-        if sign_image is not None:
-            image_name = str(num).zfill(2) \
-                         + '_x_' + str(x) + '_y_' + str(y) + '_w_' + str(w) + '_h_' + str(h) \
-                         + '_speed_' + str(target_speed) \
-                         + '_raw' \
-                         + '.png'
-            Image.fromarray(sign_image).save(os.path.join(directory_path, image_name))
-        num += 1
 
 
 def process_plates_queue(plates_queue, path):
     directory_path = prepare_dir(path)
     num = 0
     while not plates_queue.empty():
-        # keyboard.press_and_release('esc')
-        plate_distance, min_plate_x, img_with_contours_filtered = plates_queue.get()
+        lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x = plates_queue.get()
         image_name = str(num).zfill(2) \
                      + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
                      + '.png'
         Image.fromarray(img_with_contours_filtered).save(os.path.join(directory_path, image_name))
+        num += 1
+
+
+def process_signs_queue(signs_queue, path):
+    directory_path = prepare_dir(path)
+    num = 0
+    while not signs_queue.empty():
+        ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list = signs_queue.get()
+        if sign_image is not None:
+            image_name = str(num).zfill(2) \
+                         + '_x_' + str(x) + '_y_' + str(y) + '_w_' + str(w) + '_h_' + str(h) \
+                         + '_speed_' + str(speed_limit_found) \
+                         + '_raw' \
+                         + '.png'
+            Image.fromarray(sign_image).save(os.path.join(directory_path, image_name))
         num += 1
 
 

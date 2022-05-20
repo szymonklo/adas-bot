@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_current_speed, find_digit_images, \
+from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_digits_and_speed, find_digit_images, \
     find_speed_from_digit_images
 from IMAGE_PROCESSING.image_processing import filter_image2
 from SUPPORT.process_results import prepare_dir
@@ -131,6 +131,8 @@ def prepare_sign_to_digits_recognition(image):
 
 
 def find_speed_limit(sign_image, ref_digits_signs):
+    if sign_image is None:
+        return None, None
     if sign_image.shape[0] < 5 or sign_image.shape[1] < 5:
         return None, None
     sign_image_filtered = prepare_sign_to_digits_recognition(sign_image)

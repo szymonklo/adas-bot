@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image
 
 
-def find_current_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
+def find_digits_and_speed(image, ref_digits, minimum_sum=None, widths=None, axis=0):
     # if image.shape[0] != 18:
     # keyboard.press_and_release('esc')
     digit_images = find_digit_images(image, ref_digits, minimum_sum=minimum_sum, widths=widths, axis=axis)

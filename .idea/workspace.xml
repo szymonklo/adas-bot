@@ -3,15 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="acc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/DRAWING/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/DRAWING/draw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/ref_digits/ref_digits.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/ref_digits/ref_digits.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +29,9 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/venv/Lib/site-packages/numpy/core/fromnumeric.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectId" id="1lzDTW1pHi8Nvw8B1tKpIRGeiyN" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -47,7 +43,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -58,7 +54,7 @@
       <recent name="C:\PROGRAMOWANIE\python\auto\IMAGE_PROCESSING\LINE_DETECTION" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.detect_plate">
+  <component name="RunManager" selected="Python.main">
     <configuration name="detect_plate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -173,8 +169,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.detect_plate" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.detect_plate" />
         <item itemvalue="Python.find_edge" />
         <item itemvalue="Python.sign_recognition" />
         <item itemvalue="Python.find_lines" />
@@ -346,7 +342,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="rotate and crop" />
@@ -444,7 +439,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>51</line>
+          <line>52</line>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -513,13 +508,29 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <condition expression="'19_44_23' in file" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>116</line>
+          <line>117</line>
           <option name="timeStamp" value="256" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <condition expression="int(file.split('_')[0]) &gt;= 43" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
-          <line>118</line>
-          <option name="timeStamp" value="260" />
+          <line>112</line>
+          <option name="timeStamp" value="261" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="264" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
+          <line>67</line>
+          <option name="timeStamp" value="265" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MAIN/main.py</url>
+          <line>151</line>
+          <option name="timeStamp" value="267" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

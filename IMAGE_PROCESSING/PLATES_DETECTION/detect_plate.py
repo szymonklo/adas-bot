@@ -41,14 +41,15 @@ def detect_plate(image):
             y0, y1 = min(cnt[:, 0, 1]), max(cnt[:, 0, 1])
             cnt_width = x1 - x0
             cnt_height = y1 - y0
+            ratio = cnt_width / cnt_height
             rectangle_filling_ratio = cv2.contourArea(cnt) / (cnt_height * cnt_width)
             rectangle_perimeter_ratio = cv2.arcLength(cnt, closed=True) / (2 * (cnt_height + cnt_width))
 
             im_with_count = copy.deepcopy(image_color)
             im_with_count = cv2.drawContours(im_with_count, cnt, -1, (0, 255, 0), 1)
             im_with_count = cv2.rectangle(im_with_count, (x0, y0), (x1, y1), (255, 0, 0), 1)
-            if rectangle_filling_ratio > 0.8:
-                if 3.75 <= cnt_width / cnt_height <= 5.5:
+            if rectangle_filling_ratio > 0.75:
+                if 3.75 <= ratio <= 6:
                     pass
                     directory_path = prepare_dir(r'C:\PROGRAMOWANIE\auto_data\photos\plates', hour=False)
                     image_name = datetime.datetime.now().strftime('%H_%M_%S')
@@ -60,7 +61,7 @@ def detect_plate(image):
                     image_name += '.png'
                     Image.fromarray(image).save(os.path.join(directory_path, image_name))
 
-                    plates_positions.append((x0, x1, y0, y1))
+                    plates_positions.append((x0, x1, y0, y1))       # todo - y0, y1 measured from top, but should be from bottom?
 
                     # cv2.imshow('cnt', im_with_count)
                     # cv2.waitKey(0)

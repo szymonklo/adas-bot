@@ -1,11 +1,12 @@
 import time
-from math import cos, radians
 import keyboard
 
 from CONFIG.config import target_distance, Keys, tolerance, min_diff, target_degree
 
 
-def apply_correction(distance, degree, last_distance, simulate=False):
+def steer(distance, degree, last_distance, edge_found_status, simulate=False):
+    if not edge_found_status:
+        return None, None, None, None, None
     if last_distance is not None:
         change_dist = distance - last_distance
     else:
@@ -31,11 +32,7 @@ def apply_correction(distance, degree, last_distance, simulate=False):
     else:
         direction_key = Keys.left
     if not simulate:
-        steer(direction_key, time_s)
+        keyboard.press(direction_key)
+        time.sleep(time_s)
+        keyboard.release(direction_key)
     return direction_key, time_s, dist_correction, degree_correction, change_correction
-
-
-def steer(direction_key, time_s):
-    keyboard.press(direction_key)
-    time.sleep(time_s)
-    keyboard.release(direction_key)
