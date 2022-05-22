@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="acc">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="refactor">
+      <change afterPath="$PROJECT_DIR$/PARALLEL/parallel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LC/lane_centering.py" beforeDir="false" afterPath="$PROJECT_DIR$/LC/lane_centering.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +33,9 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/venv/Lib/site-packages/numpy/core/fromnumeric.py" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="1lzDTW1pHi8Nvw8B1tKpIRGeiyN" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -97,27 +102,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="find_lines" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="auto" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_lines.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="auto" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -131,6 +115,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/MAIN/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="parallel" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="auto" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/PARALLEL" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PARALLEL/parallel.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -161,8 +166,8 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.parallel" />
       <item itemvalue="Python.find_edge" />
-      <item itemvalue="Python.find_lines" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.sign_recognition" />
       <item itemvalue="Python.detect_plate" />
@@ -170,10 +175,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.parallel" />
         <item itemvalue="Python.detect_plate" />
         <item itemvalue="Python.find_edge" />
         <item itemvalue="Python.sign_recognition" />
-        <item itemvalue="Python.find_lines" />
       </list>
     </recent_temporary>
   </component>
@@ -319,7 +324,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652807549892</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="refactor">
+      <created>1653069138250</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1653069138250</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -359,7 +371,8 @@
     <MESSAGE value="find_edge" />
     <MESSAGE value="max_translation l r" />
     <MESSAGE value="acc" />
-    <option name="LAST_COMMIT_MESSAGE" value="acc" />
+    <MESSAGE value="refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -429,7 +442,7 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
-          <line>60</line>
+          <line>64</line>
           <option name="timeStamp" value="182" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -474,7 +487,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
-          <line>47</line>
+          <line>41</line>
           <option name="timeStamp" value="238" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -497,7 +510,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
-          <line>156</line>
+          <line>158</line>
           <option name="timeStamp" value="251" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -529,7 +542,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/MAIN/main.py</url>
-          <line>151</line>
+          <line>161</line>
           <option name="timeStamp" value="267" />
         </line-breakpoint>
       </breakpoints>

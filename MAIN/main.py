@@ -23,10 +23,14 @@ def run():
     speed_limit = 50
     ref_digits, ref_digits_signs = init_ref_digits()
     plate_distance = None
+    waiting = False
 
     while True:
-        print('waiting for a key')
+        if not waiting:
+            print('ready...')
+            waiting = True
         if keyboard.is_pressed('q'):
+            waiting = False
             line_queue = queue.Queue(50)
             signs_queue = queue.Queue(50)
             plates_queue = queue.Queue(50)
@@ -61,33 +65,40 @@ def run():
                     if processed_image is not None:
                         Image.fromarray(processed_image).save(os.path.join(directory_path, image_name))
 
+                st_step = time.time()
                 st_lc = time.time()
                 lane_border_results = find_lane_border(last_dist, last_trans)
                 last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = lane_border_results
+                print(f'-LC: {round(time.time() - st_lc, 3)}, dist: {dist}, trans: {trans}')
 
+                st_st = time.time()
                 steering_results = steer(dist, trans, last_dist, edge_found_status, simulate=False)
                 direction, time_s, dist_cor, degree_cor, change_cor = steering_results
-                print(f'LC: {time.time() - st_lc}, last dist: {last_dist}, last_trans: {last_trans}')
+                print(f'--STEER: {direction} for {round(time_s, 3)} seconds, {round(time.time() - st_st, 3)}, dist_cor: {round(dist_cor, 3)}, change_cor: {round(change_cor, 3)}')
 
                 st_acc = time.time()
                 plate_results = find_target(lane_borders)
                 lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x = plate_results
-                print(f'AC: {time.time() - st_acc}, plate_distance: {plate_distance}')
+                print(f'-AC: {round(time.time() - st_acc, 3)}, plate_distance: {plate_distance}')
+
+                st_cs = time.time()
+                speed_limit, ref_digits, plate_distance, processed_image, current_speed = find_current_speed(speed_limit, ref_digits, plate_distance)
+                print(f'-CS: {round(time.time() - st_cs, 3)}, current speed: {current_speed}, speed_limit: {speed_limit}')
 
                 st_cc = time.time()
-                speed_limit, ref_digits, plate_distance, processed_image, current_speed = find_current_speed(speed_limit, ref_digits, plate_distance)
-
                 change_speed(speed_limit, current_speed, plate_distance)
-                print(f'CC: {time.time() - st_cc}, current speed: {current_speed}, speed_limit: {speed_limit}')
+                print(f'--CC: {round(time.time() - st_cc, 3)}')
 
                 st_sr = time.time()
                 signs_results = find_sign(ref_digits_signs)
                 ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list = signs_results
-                print(f'SR: {time.time() - st_sr}, x: {x}, y: {y}, w: {w}, h: {h}, speed_limit: {speed_limit_found}')
+                print(f'-SR: {round(time.time() - st_sr, 3)}, speed_limit: {speed_limit_found}')
 
                 if line_queue.full():
                     line_queue.get()
                 line_queue.put(lane_border_results)
+                last_dist = dist
+                last_trans = trans
 
                 if plates_queue.full():
                     plates_queue.get()
@@ -110,6 +121,7 @@ def run():
                         if digit_queue.full():
                             digit_queue.get()
                         digit_queue.put(digit_image)
+                print(f'STEP: {round(time.time() - st_step, 3)}')
 
 
 def find_lane_border(last_dist=None, last_trans=None):

@@ -17,6 +17,7 @@ def safe_str(value):
     return text
 
 
+# todo - do not create empty dir
 def process_line_queue(results_queue, path):
     directory_path = prepare_dir(path)
     num = 0
