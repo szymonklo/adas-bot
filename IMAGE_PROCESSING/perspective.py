@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-from CONFIG.config import points_before_transform, points_after_transform, x_size, y_size, y_min, y_max, x_min, x_max, \
-    x_margin
+from config_perspective import x_margin, x_min, x_max, y_min, y_max, x_size, y_size, points_before_transform, \
+    points_after_transform
 
 
 def perspective(raw):

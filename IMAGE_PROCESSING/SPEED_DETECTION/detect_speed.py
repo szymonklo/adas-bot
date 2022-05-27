@@ -35,7 +35,7 @@ def find_speed_from_digit_images(digit_images, ref_digits, axis=1, minimum=10):
     if digits != ['']:
         spd_str = ''.join(digits)
         speed = int(spd_str)
-        if speed >= minimum:
+        if speed >= minimum and (not spd_str.startswith('1') or len(spd_str) > 2):
             # print(speed)
             # keyboard.press_and_release('esc')
             return speed, result_images_list

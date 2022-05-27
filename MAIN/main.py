@@ -3,10 +3,9 @@ import os
 import queue
 import time
 import keyboard
-from PIL import Image
 
 from CC.cruise_control import change_speed
-from CONFIG.config import window_line, window_speed, Keys, window_signs, window_plates
+from CONFIG.config import window_line, window_speed, Keys, window_signs
 from IMAGE_PROCESSING.CAPTURING.capture_image import capture_image
 from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_curvy_edge
 from IMAGE_PROCESSING.PLATES_DETECTION.detect_plate import detect_plate, judge_plates_positions
@@ -14,7 +13,7 @@ from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, fin
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_digits_and_speed
 from IMAGE_PROCESSING.image_processing import process_image_to_array, process_image_to_grayscale, filter_image
 from LC.lane_centering import steer
-from SUPPORT.process_results import process_line_queue, process_signs_queue, prepare_dir, process_plates_queue, \
+from SUPPORT.process_results import process_line_queue, process_signs_queue, process_plates_queue, \
     process_rejected_queue, process_digits_queue
 from ref_digits import init_ref_digits
 
@@ -22,7 +21,6 @@ from ref_digits import init_ref_digits
 def run():
     speed_limit = 50
     ref_digits, ref_digits_signs = init_ref_digits()
-    plate_distance = None
     waiting = False
 
     while True:
@@ -38,8 +36,8 @@ def run():
             digit_queue = queue.Queue(50)
             last_dist = None
             last_trans = None
+            last_speed = None
             while True:
-                processed_image = None
                 if keyboard.is_pressed('z'):
                     keyboard.release(Keys.up)
                     keyboard.release(Keys.down)
@@ -56,19 +54,10 @@ def run():
                 # todo - if 'a' or 'd' pressed turn off
                 # todo - if indicators pressed change line (turn off, arrow dir1 for 1 s, arrow dir2 for 1 s, turn on)
 
-                if keyboard.is_pressed('o'):
-                    directory_path = prepare_dir(r'C:\PROGRAMOWANIE\auto_data\photos\o', hour=False)
-                    image_name = datetime.datetime.now().strftime('%H_%M_%S')
-                    image_name += '.png'
-                    captured_image = capture_image(window_plates)
-                    processed_image = process_image_to_array(captured_image)
-                    if processed_image is not None:
-                        Image.fromarray(processed_image).save(os.path.join(directory_path, image_name))
-
                 st_step = time.time()
                 st_lc = time.time()
                 lane_border_results = find_lane_border(last_dist, last_trans)
-                last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = lane_border_results
+                last_dist, last_trans, processed_image_lane, dist, trans, diff, image_with_line, lane_borders, edge_found_status = lane_border_results
                 print(f'-LC: {round(time.time() - st_lc, 3)}, dist: {dist}, trans: {trans}')
 
                 st_st = time.time()
@@ -78,16 +67,17 @@ def run():
 
                 st_acc = time.time()
                 plate_results = find_target(lane_borders)
-                lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x = plate_results
+                lane_borders, processed_image_lane, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates = plate_results
                 print(f'-AC: {round(time.time() - st_acc, 3)}, plate_distance: {plate_distance}')
 
                 st_cs = time.time()
-                speed_limit, ref_digits, plate_distance, processed_image, current_speed = find_current_speed(speed_limit, ref_digits, plate_distance)
+                current_speed_results = find_current_speed(speed_limit, ref_digits, plate_distance)
+                speed_limit, ref_digits, plate_distance, processed_image_lane, current_speed = current_speed_results
                 print(f'-CS: {round(time.time() - st_cs, 3)}, current speed: {current_speed}, speed_limit: {speed_limit}')
 
                 st_cc = time.time()
-                change_speed(speed_limit, current_speed, plate_distance)
-                print(f'--CC: {round(time.time() - st_cc, 3)}')
+                speed_increase = change_speed(speed_limit, current_speed, plate_distance, last_speed=last_speed)
+                print(f'--CC: {round(time.time() - st_cc, 3)}, speed_increase: {round(speed_increase, 3)}')
 
                 st_sr = time.time()
                 signs_results = find_sign(ref_digits_signs)
@@ -103,6 +93,9 @@ def run():
                 if plates_queue.full():
                     plates_queue.get()
                 plates_queue.put(plate_results)
+
+                if current_speed is not None:
+                    last_speed =current_speed
 
                 if speed_limit_found:
                     speed_limit = speed_limit_found
@@ -128,21 +121,24 @@ def find_lane_border(last_dist=None, last_trans=None):
     captured_image = capture_image(window_line)
     processed_image = process_image_to_array(captured_image)
     processed_image = process_image_to_grayscale(processed_image)
-    dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(processed_image, save=False,
+    dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(processed_image,
                                                                                           last_dist=last_dist,
                                                                                           last_trans=last_trans)
 
     return last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status
 
 
-def find_target(lane_borders):
-    captured_image = capture_image(window_line)
-    processed_image = process_image_to_array(captured_image)
-    processed_image = process_image_to_grayscale(processed_image)
+def find_target(lane_borders, processed_image_lane=None):
+    if processed_image_lane is None:
+        captured_image = capture_image(window_line)
+        processed_image = process_image_to_array(captured_image)
+        processed_image = process_image_to_grayscale(processed_image)
+    else:
+        processed_image = processed_image_lane
     plates_positions, img_with_contours_filtered = detect_plate(processed_image)
-    plate_distance, min_plate_x = judge_plates_positions(plates_positions, lane_borders, image=processed_image)
+    plate_distance, min_plate_x, image_with_lane_and_plates = judge_plates_positions(plates_positions, lane_borders, image=processed_image)
 
-    return lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x
+    return lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates
 
 
 def find_current_speed(speed_limit, ref_digits, plate_distance):

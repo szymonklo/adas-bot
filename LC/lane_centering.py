@@ -1,8 +1,7 @@
 import math
-import time
 import keyboard
 
-from CONFIG.config import target_distance, Keys, tolerance, min_diff, target_degree
+from CONFIG.config import target_distance, Keys, target_degree
 
 
 def steer(distance, degree, last_distance, edge_found_status, simulate=False):

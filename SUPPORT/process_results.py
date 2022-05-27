@@ -50,7 +50,7 @@ def process_plates_queue(plates_queue, path):
     directory_path = prepare_dir(path)
     num = 0
     while not plates_queue.empty():
-        lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x = plates_queue.get()
+        lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates = plates_queue.get()
         image_name = str(num).zfill(2) \
                      + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
                      + '.png'

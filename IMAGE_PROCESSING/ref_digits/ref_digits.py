@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 
 from config import RefDigitsPath
-from detect_speed import find_digit_images
 
 
 def init_ref_digits():

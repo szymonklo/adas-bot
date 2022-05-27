@@ -4,7 +4,7 @@ import os
 import cv2
 from PIL import Image
 
-from CONFIG.config import window_plates, steps, height_step, bottom_dist
+from CONFIG.config import steps, height_step, bottom_dist
 from SUPPORT.process_results import prepare_dir
 from draw import draw_lane_and_plates
 from find_edge import find_curvy_edge
@@ -85,12 +85,13 @@ def judge_plates_positions(plates_positions, lane_borders, image=None):
                             min_plate_y = plate_y
                             min_plate_x = plate_x
                 bottom += height_step
+    image_with_lane_and_plates = None
+    if image is not None:
+        image_with_lane_and_plates = draw_lane_and_plates(plates_positions, lane_borders, image, min_plate_y, min_plate_x)
     if min_plate_y != 1000:
-        if image is not None:
-            draw_lane_and_plates(plates_positions, lane_borders, image, min_plate_y, min_plate_x)
-        return min_plate_y, min_plate_x
+        return min_plate_y, min_plate_x, image_with_lane_and_plates
 
-    return None, None
+    return None, None, None
 
 
 if __name__ == '__main__':
@@ -111,10 +112,9 @@ if __name__ == '__main__':
                 # image = image[window_plates['top']: window_plates['top'] + window_plates['height'],
                 #         window_plates['left']: window_plates['left'] + window_plates['width']]
                 dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(image,
-                                                                                                      save=False,
                                                                                                       last_dist=dist,
                                                                                                       last_trans=trans)
                 plates_positions, img_with_contours_filtered = detect_plate(image)
-                plate_distance, min_plate_x = judge_plates_positions(plates_positions, lane_borders,
-                                                                     image=image)
+                plate_distance, min_plate_x, image_with_lane_and_plates = judge_plates_positions(plates_positions, lane_borders,
+                                                                     image=img_with_contours_filtered)
                 pass
