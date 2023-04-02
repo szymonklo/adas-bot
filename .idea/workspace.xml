@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="keyboard.call_later">
+    <list default="true" id="dee17230-cb90-45a7-a9f3-7694ad3acef1" name="Default Changelist" comment="fixing after refactoring">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CC/cruise_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/CC/cruise_control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CONFIG/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIG/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/DRAWING/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/DRAWING/draw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/LINE_DETECTION/find_edge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/SPEED_DETECTION/detect_speed.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMAGE_PROCESSING/image_processing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LC/lane_centering.py" beforeDir="false" afterPath="$PROJECT_DIR$/LC/lane_centering.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MAIN/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/MAIN/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SUPPORT/process_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/SUPPORT/process_results.py" afterDir="false" />
     </list>
@@ -352,7 +343,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653663964747</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fixing after refactoring">
+      <created>1680428360692</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1680428360692</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -394,7 +392,8 @@
     <MESSAGE value="acc" />
     <MESSAGE value="refactor" />
     <MESSAGE value="keyboard.call_later" />
-    <option name="LAST_COMMIT_MESSAGE" value="keyboard.call_later" />
+    <MESSAGE value="fixing after refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing after refactoring" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -462,11 +461,6 @@
           <line>93</line>
           <option name="timeStamp" value="178" />
         </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
-          <line>156</line>
-          <option name="timeStamp" value="182" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
           <line>15</line>
@@ -494,7 +488,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
-          <line>129</line>
+          <line>195</line>
           <option name="timeStamp" value="238" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -509,7 +503,7 @@
           <line>141</line>
           <option name="timeStamp" value="240" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+        <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/SIGN_RECOGNITION/sign_recognition.py</url>
           <line>161</line>
           <option name="timeStamp" value="251" />
@@ -531,12 +525,12 @@
           <line>113</line>
           <option name="timeStamp" value="261" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+        <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/MAIN/main.py</url>
-          <line>145</line>
+          <line>150</line>
           <option name="timeStamp" value="267" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+        <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="len(plates_positions) &gt; 0" language="Python" />
           <url>file://$PROJECT_DIR$/IMAGE_PROCESSING/PLATES_DETECTION/detect_plate.py</url>
           <line>90</line>
@@ -550,8 +544,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
-          <line>17</line>
+          <line>18</line>
           <option name="timeStamp" value="276" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
+          <line>34</line>
+          <option name="timeStamp" value="277" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
+          <line>224</line>
+          <option name="timeStamp" value="281" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SUPPORT/process_results.py</url>
+          <line>40</line>
+          <option name="timeStamp" value="282" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

@@ -1,5 +1,6 @@
 import datetime
 import os
+from typing import List
 
 from PIL import Image
 
@@ -8,7 +9,7 @@ class Results:
     root = r'C:\PROGRAMOWANIE\auto_data\photos'
 
     def __init__(self, directory):
-        self.list = list()
+        self.list: List[Result] = list()
         self.path = os.path.join(Results.root, directory)
         self.max_size = 50
 
@@ -30,30 +31,28 @@ class Results:
         directory_path = prepare_dir(self.path)
         num = 0
         while len(self.list) > 0:
-            last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = self.list.pop(0)
-            if dist is None:
-                dist = 0
-            if processed_image is not None:
-                image_name = str(num).zfill(2) \
-                             + '_raw' \
-                             + '.png'
-                Image.fromarray(processed_image).save(os.path.join(directory_path, image_name))
-
-            if image_with_line is not None:
-                image_name = str(num).zfill(2) \
-                             + '_dst_' + safe_str(dist) \
-                             + '_tra_' + safe_str(trans) \
-                             + '_dif_' + safe_str(diff) \
-                             + '.png'
-                image_name = str(num).zfill(2) \
-                                 + '.png'
-                Image.fromarray(image_with_line).save(os.path.join(directory_path, image_name))
+            # last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = self.list.pop(0)
+            # processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = self.list.pop(0)
+            r = self.list.pop(0)
+            try:
+                r.save(directory_path, num)
+            except Exception as e:
+                print(e)
+                raise NotImplementedError(f'Result type not implemented yet for {type(r)}')
+                raise NotImplementedError(f'Result type not implemented yet for tuple of length {len(r)}')
             num += 1
 
 
 class Result:
     def __init__(self, processed_image):
         self.processed_image = processed_image
+
+    def save(self, directory_path, num):
+        if self.processed_image is not None:
+            image_name = str(num).zfill(2) \
+                         + '_raw' \
+                         + '.png'
+            Image.fromarray(self.processed_image).save(os.path.join(directory_path, image_name))
 
 
 class Edge_results(Result):
@@ -68,6 +67,72 @@ class Edge_results(Result):
 
     # def dist(self):
     #     return self.__dist
+    def save(self, directory_path, num):
+        super().save(directory_path, num)
+
+        if self.image_with_line is not None:
+            image_name = str(num).zfill(2) \
+                         + '_dst_' + safe_str(self.dist) \
+                         + '_tra_' + safe_str(self.trans) \
+                         + '_dif_' + safe_str(self.diff) \
+                         + '.png'
+            Image.fromarray(self.image_with_line).save(os.path.join(directory_path, image_name))
+
+
+class Sign_results(Result):
+    def __init__(self, processed_image, ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected,
+                 speed_limit_found, digit_images_list):
+        # todo
+        super().__init__(processed_image)
+        self.ref_digits_signs = ref_digits_signs
+        self.mask = mask
+        self.image = image
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.sign_image = sign_image
+        self.rejected = rejected
+        self.speed_limit_found = speed_limit_found
+        self.digit_images_list = digit_images_list
+
+    def save(self, directory_path, num):
+        super().save(directory_path, num)
+
+        if self.sign_image is not None:
+            image_name = str(num).zfill(2) \
+                         + '_x_' + str(self.x) + '_y_' + str(self.y) + '_w_' + str(self.w) + '_h_' + str(self.h) \
+                         + '_speed_' + str(self.speed_limit_found) \
+                         + '_raw' \
+                         + '.png'
+            Image.fromarray(self.sign_image).save(os.path.join(directory_path, image_name))
+
+
+class Plate_results(Result):
+    def __init__(self, processed_image, lane_borders, plates_positions, img_with_contours_filtered, plate_distance,
+                 min_plate_x, image_with_lane_and_plates):
+        super().__init__(processed_image)
+        self.lane_borders = lane_borders
+        self.plates_positions = plates_positions
+        self.img_with_contours_filtered = img_with_contours_filtered
+        self.plate_distance = plate_distance
+        self.min_plate_x = min_plate_x
+        self.image_with_lane_and_plates = image_with_lane_and_plates
+
+    # def dist(self):
+    #     return self.__dist
+    def save(self, directory_path, num):
+        super().save(directory_path, num)
+
+        if True:    # todo
+            image_name = str(num).zfill(2) \
+                         + 'cont' + '_y_' + str(self.plate_distance) + '_x_' + str(self.min_plate_x) \
+                         + '.png'
+            Image.fromarray(self.img_with_contours_filtered).save(os.path.join(directory_path, image_name))
+            image_name = str(num).zfill(2) \
+                         + 'plates' + '_y_' + str(self.plate_distance) + '_x_' + str(self.min_plate_x) \
+                         + '.png'
+            Image.fromarray(self.image_with_lane_and_plates).save(os.path.join(directory_path, image_name))
 
 
 class Line_result(Results):
@@ -106,6 +171,7 @@ def safe_str(value):
 
 
 # todo - do not create empty dir
+# legacy
 def process_line_queue(results_queue, path):
     directory_path = prepare_dir(path)
     num = 0
@@ -134,6 +200,7 @@ def process_line_queue(results_queue, path):
         num += 1
 
 
+# legacy
 def process_plates_queue(plates_queue, path):
     directory_path = prepare_dir(path)
     num = 0

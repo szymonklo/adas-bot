@@ -5,7 +5,7 @@ from CC.cruise_control import change_speed
 from CONFIG.config import window_line, window_speed, Keys, window_signs
 from IMAGE_PROCESSING.CAPTURING.capture_image import capture_image
 from IMAGE_PROCESSING.LINE_DETECTION.find_edge import find_curvy_edge
-from process_results import Edge_results
+from process_results import Edge_results, Sign_results, Plate_results
 from IMAGE_PROCESSING.PLATES_DETECTION.detect_plate import detect_plates, judge_plates_positions
 from IMAGE_PROCESSING.SIGN_RECOGNITION.sign_recognition import find_circles, find_speed_limit
 from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_digits_and_speed
@@ -33,15 +33,10 @@ def run():
             current_digit_queue = Results('speedometer_digits')
             rejected_queue = Results('rejected_circles')
             digit_queue = Results('sign_digits')
-            last_dist = None
-            last_trans = None
-            last_speed = None
+            last_dist, last_trans, last_speed = None, None, None
             while True:
                 if keyboard.is_pressed('z'):
-                    keyboard.release(Keys.up)
-                    keyboard.release(Keys.down)
-                    keyboard.release(Keys.left)
-                    keyboard.release(Keys.right)
+                    release_arrow_keys()
                     # keyboard.press_and_release('esc')
                     line_results.process()
                     signs_queue.process()
@@ -72,11 +67,11 @@ def run():
                 # check if it is the same
                 lane_borders = line_results.current().lane_borders
                 plate_results = find_target(lane_borders)
-                lane_borders, processed_image_lane, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates = plate_results
-                print(f'-AC: {round(time.time() - st_acc, 3)}, plate_distance: {plate_distance}')
+                # lane_borders, processed_image_lane, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates = plate_results
+                print(f'-AC: {round(time.time() - st_acc, 3)}, plate_distance: {plate_results.plate_distance}')
 
                 st_cs = time.time()
-                current_speed_results = find_current_speed(speed_limit, ref_digits, plate_distance)
+                current_speed_results = find_current_speed(speed_limit, ref_digits, plate_results.plate_distance)
                 speed_limit, ref_digits, plate_distance, processed_image_lane, current_speed, result_images_list = current_speed_results
                 print(f'-CS: {round(time.time() - st_cs, 3)}, current speed: {current_speed}, speed_limit: {speed_limit}')
 
@@ -86,8 +81,8 @@ def run():
 
                 st_sr = time.time()
                 signs_results = find_sign(ref_digits_signs)
-                ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list = signs_results
-                print(f'-SR: {round(time.time() - st_sr, 3)}, speed_limit: {speed_limit_found}')
+                # ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list = signs_results
+                print(f'-SR: {round(time.time() - st_sr, 3)}, speed_limit: {signs_results.speed_limit_found}')
 
                 last_dist = line_results.current().dist
                 last_trans = line_results.current().trans
@@ -99,13 +94,21 @@ def run():
                 if current_speed is not None:
                     last_speed = current_speed
 
-                if speed_limit_found:
+                if signs_results.speed_limit_found:
                     signs_queue.add_result(signs_results)
+                    speed_limit = signs_results.speed_limit_found
 
-                rejected_queue.add_result(rejected)
-                digit_queue.add_result(digit_images_list)
+                rejected_queue.add_result(signs_results.rejected)
+                digit_queue.add_result(signs_results.digit_images_list)
 
                 print(f'STEP: {round(time.time() - st_step, 3)}')
+
+
+def release_arrow_keys():
+    keyboard.release(Keys.up)
+    keyboard.release(Keys.down)
+    keyboard.release(Keys.left)
+    keyboard.release(Keys.right)
 
 
 def find_lane_border(line_results, last_dist=None, last_trans=None):
@@ -127,7 +130,9 @@ def find_target(lane_borders, processed_image_lane=None):
     plates_positions, img_with_contours_filtered = detect_plates(processed_image)
     plate_distance, min_plate_x, image_with_lane_and_plates = judge_plates_positions(plates_positions, lane_borders, image=img_with_contours_filtered)
 
-    return lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates
+    plate_results = Plate_results(processed_image, lane_borders, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates)
+
+    return plate_results
 
 
 def find_current_speed(speed_limit, ref_digits, plate_distance):
@@ -145,7 +150,8 @@ def find_sign(ref_digits_signs):
     mask, image = filter_image(processed_image)
     x, y, w, h, sign_image, rejected = find_circles(mask, image)
     speed_limit_found, digit_images_list = find_speed_limit(sign_image, ref_digits_signs)
-    return ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list
+    sign_results = Sign_results(processed_image, ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list)
+    return sign_results #ref_digits_signs, mask, image, x, y, w, h, sign_image, rejected, speed_limit_found, digit_images_list
 
 
 if __name__ == '__main__':
