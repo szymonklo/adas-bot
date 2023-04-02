@@ -32,8 +32,8 @@ def binarize(image):
     return binary_image
 
 
-def filter_image(image, debug=False):
-    hsv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2HSV)
+def filter_image(image, color=cv2.COLOR_RGB2HSV, lower_hsv=None, upper_hsv=None, debug=False):
+    hsv = cv2.cvtColor(np.array(image), color)
 
     if debug is True:
         h = hsv[:, :, 0]
@@ -42,12 +42,14 @@ def filter_image(image, debug=False):
 
     # lower_red = np.array([160, 150, 0])
     # upper_red = np.array([179, 255, 255])
-    lower_red = np.array([0, 150, 0])
-    upper_red = np.array([20, 255, 255])
+    if lower_hsv is None:
+        lower_hsv = np.array([0, 150, 0])
+    if upper_hsv is None:
+        upper_hsv = np.array([20, 255, 255])
 
-    mask = cv2.inRange(hsv, lower_red, upper_red)
+    mask = cv2.inRange(hsv, lower_hsv, upper_hsv)
 
-    result = cv2.bitwise_and(image, image, mask=mask)
+    # result = cv2.bitwise_and(image, image, mask=mask)
     # result = cv2.cvtColor(np.array(result), cv2.COLOR_BGR2RGB)
 
     # cv2.imshow('image', image)
@@ -60,7 +62,7 @@ def filter_image(image, debug=False):
     return mask2, image2
 
 
-def filter_image2(image, lower_hsv, upper_hsv, debug=False):
+def filter_image2(image, color, lower_hsv, upper_hsv, debug=False):
     try:
         hsv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2HSV)
     except Exception as e:
@@ -78,14 +80,9 @@ def filter_image2(image, lower_hsv, upper_hsv, debug=False):
 
     mask = cv2.inRange(hsv, lower, upper)
 
-    height, width, depth = image.shape
-    circle = np.zeros((height, width), dtype=np.uint8)
-    r = int(min(width // 2, height // 2) * 0.8)
-    cv2.circle(circle, (width // 2, height // 2), r, 1, thickness=-1)
+    mask_with_circle = prepare_mask_with_circle(image, mask)
 
-    mask_with_circle = cv2.bitwise_and(mask, mask, mask=circle)
-
-    result = cv2.bitwise_and(image, image, mask=mask)
+    # result = cv2.bitwise_and(image, image, mask=mask)
     # result = cv2.cvtColor(np.array(result), cv2.COLOR_BGR2RGB)
 
     # cv2.imshow('image', image)
@@ -96,6 +93,15 @@ def filter_image2(image, lower_hsv, upper_hsv, debug=False):
     # find_circles(mask2, image2)
 
     return mask2, image2, mask_with_circle
+
+
+def prepare_mask_with_circle(image, mask):
+    height, width, depth = image.shape
+    circle = np.zeros((height, width), dtype=np.uint8)
+    r = int(min(width // 2, height // 2) * 0.8)
+    cv2.circle(circle, (width // 2, height // 2), r, 1, thickness=-1)
+    mask_with_circle = cv2.bitwise_and(mask, mask, mask=circle)
+    return mask_with_circle
 
 
 if __name__ == '__main__':

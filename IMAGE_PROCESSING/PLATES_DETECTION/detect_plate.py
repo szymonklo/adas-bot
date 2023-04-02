@@ -10,7 +10,7 @@ from draw import draw_lane_and_plates
 from find_edge import find_curvy_edge
 
 
-def detect_plate(image):
+def detect_plates(image):
     plates_positions = []
     # # Set up the detector with default parameters.
     # detector = cv2.SimpleBlobDetector()
@@ -91,7 +91,7 @@ def judge_plates_positions(plates_positions, lane_borders, image=None):
     if min_plate_y != 1000:
         return min_plate_y, min_plate_x, image_with_lane_and_plates
 
-    return None, None, None
+    return None, None, image_with_lane_and_plates
 
 
 if __name__ == '__main__':
@@ -114,7 +114,7 @@ if __name__ == '__main__':
                 dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(image,
                                                                                                       last_dist=dist,
                                                                                                       last_trans=trans)
-                plates_positions, img_with_contours_filtered = detect_plate(image)
+                plates_positions, img_with_contours_filtered = detect_plates(image)
                 plate_distance, min_plate_x, image_with_lane_and_plates = judge_plates_positions(plates_positions, lane_borders,
                                                                      image=img_with_contours_filtered)
                 pass

@@ -1,6 +1,94 @@
 import datetime
 import os
+
 from PIL import Image
+
+
+class Results:
+    root = r'C:\PROGRAMOWANIE\auto_data\photos'
+
+    def __init__(self, directory):
+        self.list = list()
+        self.path = os.path.join(Results.root, directory)
+        self.max_size = 50
+
+    def add_result(self, results):
+        if results:
+            if not isinstance(results, list):
+                # results = list(results)
+                self.list.append(results)
+                return
+            for result in results:
+                if len(self.list) >= self.max_size:
+                    self.list.pop(0)
+                self.list.append(result)
+
+    def current(self):
+        return self.list[-1]
+
+    def process(self):
+        directory_path = prepare_dir(self.path)
+        num = 0
+        while len(self.list) > 0:
+            last_dist, last_trans, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status = self.list.pop(0)
+            if dist is None:
+                dist = 0
+            if processed_image is not None:
+                image_name = str(num).zfill(2) \
+                             + '_raw' \
+                             + '.png'
+                Image.fromarray(processed_image).save(os.path.join(directory_path, image_name))
+
+            if image_with_line is not None:
+                image_name = str(num).zfill(2) \
+                             + '_dst_' + safe_str(dist) \
+                             + '_tra_' + safe_str(trans) \
+                             + '_dif_' + safe_str(diff) \
+                             + '.png'
+                image_name = str(num).zfill(2) \
+                                 + '.png'
+                Image.fromarray(image_with_line).save(os.path.join(directory_path, image_name))
+            num += 1
+
+
+class Result:
+    def __init__(self, processed_image):
+        self.processed_image = processed_image
+
+
+class Edge_results(Result):
+    def __init__(self, processed_image, dist, trans, diff, image_with_line, lane_borders, edge_found_status):
+        super().__init__(processed_image)
+        self.dist = dist
+        self.trans = trans
+        self.diff = diff
+        self.image_with_line = image_with_line
+        self.lane_borders = lane_borders
+        self.edge_found_status = edge_found_status
+
+    # def dist(self):
+    #     return self.__dist
+
+
+class Line_result(Results):
+    def __init__(self, directory):
+        Results.__init__(self, directory)
+        # Edge_results.__init__(self, )
+
+    def current(self) -> Edge_results:
+        return self.list[-1]
+
+    def previous(self) -> (Edge_results, None):
+        if len(self.list) >= 2:
+            return self.list[-2]
+        else:
+            return None
+
+    # def dist(self) -> int:
+    #     return self.current().dist
+    #
+    # def trans(self) -> int:
+    #     return self.current().trans
 
 
 def safe_str(value):
@@ -52,9 +140,13 @@ def process_plates_queue(plates_queue, path):
     while not plates_queue.empty():
         lane_borders, processed_image, plates_positions, img_with_contours_filtered, plate_distance, min_plate_x, image_with_lane_and_plates = plates_queue.get()
         image_name = str(num).zfill(2) \
-                     + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
+                     + 'count' + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
                      + '.png'
         Image.fromarray(img_with_contours_filtered).save(os.path.join(directory_path, image_name))
+        image_name = str(num).zfill(2) \
+                     + 'plates' + '_y_' + str(plate_distance) + '_x_' + str(min_plate_x) \
+                     + '.png'
+        Image.fromarray(image_with_lane_and_plates).save(os.path.join(directory_path, image_name))
         num += 1
 
 

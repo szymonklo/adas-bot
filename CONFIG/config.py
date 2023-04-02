@@ -42,7 +42,7 @@ lane_width_decrement_per_step = 29
 default_half_search_width = 150
 height_step = 20
 steps = 7
-min_diff = 9   # 60 px -> diff thresh 600
+min_diff = 8.5  # per pixel height   # 60 px -> diff thresh 600
 # find_edge.py  find_edge
 default_y1 = -60
 min_line_search_half_width = 60
@@ -56,7 +56,7 @@ default_lane_width = 409
 # ACTIONS
 
 # lane_centering.py steer
-target_distance = 600
+target_distance = 600 +  50
 target_degree = 66
 
 # cruise_control.py change speed

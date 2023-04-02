@@ -2,19 +2,23 @@ import math
 import keyboard
 
 from CONFIG.config import target_distance, Keys, target_degree
+from process_results import Line_result
 
 
-def steer(distance, degree, last_distance, edge_found_status, simulate=False):
-    if not edge_found_status:
+def steer(line_results: Line_result, simulate=False):
+    if not line_results.current().edge_found_status:
         return None, 0, 0, 0, 0
-    if last_distance is not None:
-        change_dist = distance - last_distance
+    if line_results.previous() is not None:
+        if line_results.previous().dist is not None:
+            change_dist = line_results.current().dist - line_results.previous().dist
+        else:
+            change_dist = 0
     else:
         change_dist = 0
-    deviation = distance - target_distance
+    deviation = line_results.current().dist - target_distance
     # if abs(deviation) < 50:
     # deviation = 0.02 * deviation * deviation * math.copysign(1, deviation)
-    deviation_deg = degree - target_degree
+    deviation_deg = line_results.current().trans - target_degree
 
     # # coefficients when saving images
     # dist_correction = deviation * 1 / 1000
@@ -23,7 +27,7 @@ def steer(distance, degree, last_distance, edge_found_status, simulate=False):
 
     # coefficients when not saving images
     # dist_correction = 0.0001 * deviation
-    dist_correction = 3e-6 * deviation * deviation * math.copysign(1, deviation)
+    dist_correction = 3e-6 * deviation * deviation * math.copysign(1, deviation) * 1.5
     degree_correction = 0  # deviation_deg * 2 / 1000
     change_correction = 0.001 * change_dist
     # if abs(change_dist) < 6.25:

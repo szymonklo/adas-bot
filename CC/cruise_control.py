@@ -1,5 +1,3 @@
-import time
-
 import keyboard
 
 from CONFIG.config import Keys, speed_tolerance_up, target_plate_distance

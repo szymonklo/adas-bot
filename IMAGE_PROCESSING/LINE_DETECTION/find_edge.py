@@ -5,19 +5,21 @@ import numpy as np
 from math import sin, cos, pi
 from scipy.ndimage import gaussian_filter
 
-from CONFIG.config import target_distance, min_diff, default_x1, default_x2, window_line, steps, height_step, \
+from CONFIG.config import min_diff, default_x1, default_x2, window_line, steps, height_step, \
     bottom_dist, min_line_search_half_width, min_x1, default_right_margin, lane_width_decrement_per_step, \
-    default_lane_width
+    default_lane_width, target_distance
 from draw import draw_lane
+from process_results import Edge_results
 
 
-def find_curvy_edge(image, last_dist=None, last_trans=None):
+def find_curvy_edge(image, last_dist=None, last_trans=None, debug=False) -> Edge_results:
     # todo - add second edge as verification
     # init variables
     bottom_in_current_step = bottom_dist
     lane_width_in_current_step = default_lane_width
     first_result_index_found = False
-    first_result_index = 0
+    default_result_index = 3
+    result_index = 0
 
     # init results arrays
     last_dist_internal = [None] * steps
@@ -25,6 +27,7 @@ def find_curvy_edge(image, last_dist=None, last_trans=None):
     max_diff_internal = [None] * steps
     edge_found_statuses = [False] * steps
     lane_borders = [(0, 0)] * steps
+    search_borders = [(0, 0)] * steps
 
     for i in range(steps):
         y1 = window_line['height'] - bottom_in_current_step - height_step
@@ -33,39 +36,42 @@ def find_curvy_edge(image, last_dist=None, last_trans=None):
         if last_dist is not None and last_trans is not None:
             if i != 0:
                 last_dist -= lane_width_decrement_per_step
-            half_search_width = height_step * 2
+            half_search_width = height_step * 2.5
             if first_result_index_found is False:
                 half_search_width = height_step * 6  # 4 was too low when engaging at curve
             half_search_width = max(2 * last_trans, min_line_search_half_width, half_search_width)
             x1 = min(last_dist - half_search_width - last_trans, image.shape[1] - default_right_margin)
             x2 = min(last_dist + half_search_width - last_trans, image.shape[1])
-            max_translation_l = last_trans - height // 2
+            x1 = max(min_x1, x1)
+            x2 = max(x1 + half_search_width * 2, x2)
+            max_translation_l = last_trans - height // 2        # todo - increase for higher curvature and higher step
             max_translation_r = last_trans + height // 2
         else:
             x1 = default_x1
-            x2 = default_x2
+            x2 = int(default_x2 - lane_width_decrement_per_step / 2 * i)
             max_translation_l = -height * 2
             max_translation_r = height * 2
-        x1 = max(min_x1, x1)
 
-        find_edge_results = find_edge(image, x1, x2, y1, y2, max_translation_l, max_translation_r)
+        search_borders[i] = x1, x2
+
+        find_edge_results = find_edge(image, x1, x2, y1, y2, max_translation_l, max_translation_r, debug=debug)
         last_dist_internal[i], last_trans_internal[i], max_diff_internal[i], edge_found_statuses[i] = find_edge_results
         bottom_in_current_step += height_step
 
-        last_dist = last_dist_internal[i]
-        last_trans = last_trans_internal[i]
-
         if edge_found_statuses[i]:
+            last_dist = last_dist_internal[i]
+            last_trans = last_trans_internal[i]
             if first_result_index_found is False:
-                first_result_index = i
+                result_index = i
                 first_result_index_found = True
+            elif i <= default_result_index:
+                result_index = i
             last_dist_internal[i] += lane_width_decrement_per_step * i
         else:
             lane_borders[i] = (0, 0)
         lane_borders[i] = (find_edge_results[0] - lane_width_in_current_step, find_edge_results[0])
         lane_width_in_current_step -= lane_width_decrement_per_step
 
-    result_index = max(6, first_result_index)  # first_result_index   # todo - test with other values: max(6, first_result_index)
     if edge_found_statuses[result_index]:
         last_dist = last_dist_internal[result_index]
         last_trans = last_trans_internal[result_index]
@@ -76,20 +82,22 @@ def find_curvy_edge(image, last_dist=None, last_trans=None):
     if len([status for status in max_diff_internal if status > 0.8 * min_diff * height_step]) < 3:
         last_dist, last_trans, max_diff, edge_found_status = None, None, None, False
     # image_with_line = images_with_line_internal[result_index]
-    image_with_lane = draw_lane(image, lane_borders, max_diff_internal=max_diff_internal, edge_found_statuses=edge_found_statuses)
+    image_with_lane = draw_lane(image, lane_borders, max_diff_internal=max_diff_internal,
+                                edge_found_statuses=edge_found_statuses, search_borders=search_borders)
 
-    return last_dist, last_trans, max_diff, image_with_lane, lane_borders, edge_found_status
+    edge_results = Edge_results(image, last_dist, last_trans, max_diff, image_with_lane, lane_borders, edge_found_status)
+    return edge_results
 
 
 def find_edge(image, x1, x2, y1, y2, max_translation_l, max_translation_r,
-              edge_thickness=1):
-    # for debug
-    # line_h1 = Line(x1=x1, y1=y1, x2=x2, y2=y1)
-    # line_h2 = Line(x1=x1, y1=y2, x2=x2, y2=y2)
-    # line_v1 = Line(x1=x1, y1=y1, x2=x1, y2=y2)
-    # line_v2 = Line(x1=x2, y1=y1, x2=x2, y2=y2)
-    # line_t = Line(x1=target_distance, y1=y1, x2=target_distance, y2=y1 + (y2 - y1) // 2)
-    # image_with_area = draw_lines(image, [line_h1, line_h2, line_v1, line_v2, line_t])
+              edge_thickness=1, debug=False):
+    if debug:
+        line_h1 = Line(x1=x1, y1=y1, x2=x2, y2=y1)
+        line_h2 = Line(x1=x1, y1=y2, x2=x2, y2=y2)
+        line_v1 = Line(x1=x1, y1=y1, x2=x1, y2=y2)
+        line_v2 = Line(x1=x2, y1=y1, x2=x2, y2=y2)
+        line_t = Line(x1=target_distance, y1=y1, x2=target_distance, y2=y1 + (y2 - y1) // 2)
+        image_with_area = draw_lines(image, [line_h1, line_h2, line_v1, line_v2, line_t])
 
     image_cropped_raw = image[y1: y2, x1: x2]
     image_cropped = gaussian_filter(image_cropped_raw, sigma=1)
@@ -124,9 +132,9 @@ def find_edge(image, x1, x2, y1, y2, max_translation_l, max_translation_r,
     dst_max = index_max[1][0] + max_translation_l # why was + max_translation?
     dst_max = dst_max + x1
 
-    # for debug
-    # line = Line(dst_max, 0, alpha=270, length=image.shape[0])
-    # image_with_line = draw_lines(image_with_area, [line])
+    if debug:
+        line = Line(dst_max, 0, alpha=270, length=image.shape[0])
+        image_with_line = draw_lines(image_with_area, [line])
 
     # print(dst_max, trans_max, max_diff)
     # cv2.imshow("image_with_line", image_with_line)
@@ -253,7 +261,7 @@ class Rectangle:
 
 
 if __name__ == '__main__':
-    path = r'C:\PROGRAMOWANIE\auto_data\photos\lc\2022-05-19\00_04_32'
+    path = r'C:\PROGRAMOWANIE\auto_data\photos\lc\2022-05-28\11_47_00'
 
     dists = []
     dist = None
@@ -267,6 +275,7 @@ if __name__ == '__main__':
                 dist, trans, diff, image_with_line, lane_borders, edge_found_status = find_curvy_edge(image,
                                                                                                       last_dist=dist,
                                                                                                       last_trans=trans,
+                                                                                                      debug=True
                                                                                                       )
                 print(f'E2: {time.time() - st}')
 

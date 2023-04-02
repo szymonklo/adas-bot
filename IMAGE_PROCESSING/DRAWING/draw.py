@@ -2,7 +2,7 @@ import copy
 
 import cv2
 
-from config import bottom_dist, height_step
+from config import bottom_dist, height_step, target_distance
 
 
 def draw_lane_and_plates(plates_positions, lane_borders, image, min_plate_y, min_plate_x):
@@ -17,7 +17,7 @@ def draw_lane_and_plates(plates_positions, lane_borders, image, min_plate_y, min
     return image
 
 
-def draw_lane(image, lane_borders, max_diff_internal=None, edge_found_statuses=None):
+def draw_lane(image, lane_borders, max_diff_internal=None, edge_found_statuses=None, search_borders=None):
     image_with_lane = copy.deepcopy(image)
     lane_borders.append(lane_borders[-1])
     bottom = image.shape[0] - bottom_dist  # todo: check if ok to change that value later (shallow copy)
@@ -36,6 +36,13 @@ def draw_lane(image, lane_borders, max_diff_internal=None, edge_found_statuses=N
             if max_diff_internal is not None:
                 image_with_lane = put_diff_res(bottom, i, image_with_lane, lane_border_down, max_diff_internal,
                                                thickness)
+            if search_borders is not None:
+                image_with_lane = cv2.line(image_with_lane, (search_borders[i][0], bottom - i * height_step),
+                                           (search_borders[i][0], bottom - (i + 1) * height_step), (255, 0, 0), 1)
+                image_with_lane = cv2.line(image_with_lane, (search_borders[i][1], bottom - i * height_step),
+                                           (search_borders[i][1], bottom - (i + 1) * height_step), (255, 0, 0), 1)
+    image_with_lane = cv2.line(image_with_lane, (target_distance, bottom),
+                               (target_distance, bottom - 10), (255, 0, 0), 1)
     return image_with_lane
 
 

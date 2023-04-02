@@ -2,22 +2,18 @@ import copy
 import math
 import os
 import time
-import keyboard
 
 import cv2
 import numpy as np
-from PIL import Image
 
-from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_digits_and_speed, find_digit_images, \
-    find_speed_from_digit_images
-from IMAGE_PROCESSING.image_processing import filter_image2
-from SUPPORT.process_results import prepare_dir
+from IMAGE_PROCESSING.SPEED_DETECTION.detect_speed import find_digit_images, find_speed_from_digit_images
+from IMAGE_PROCESSING.image_processing import filter_image2, filter_image, prepare_mask_with_circle
 from find_edge import normalize
 from ref_digits import init_ref_digits
 
 
 def find_circles(mask, image):
-    # todo - 1. circle vs triangle vs rectangle -> first trial to solve as avg dev
+    # todo - 1. circle vs triangle vs rectangle -> first trial -  avg dev from radius of minimum enclosing circle
     #        2. join split contours?
     # circles = cv2.HoughCircles(image=mask, method=cv2.HOUGH_GRADIENT, dp=1, minDist=1)
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -65,8 +61,6 @@ def find_circles(mask, image):
                         h = 2 * radius
 
                         sign_image = image[y: y + h, x: x + w, :]
-                        # print(time.time())
-                        # keyboard.press_and_release('esc')
 
                         # for debug only
                         # path = r'C:\PROGRAMOWANIE\auto_data\photos\sr'
@@ -125,7 +119,14 @@ def prepare_sign_to_digits_recognition(image):
     lower_hsv = np.array([0, 0, 0])
     upper_hsv = np.array([255, 255, 60])
 
-    mask, image, mask_with_circle = filter_image2(image_normalized, lower_hsv, upper_hsv, debug=True)
+    mask, image = filter_image(image_normalized, color=cv2.COLOR_RGB2HSV,
+                               lower_hsv=lower_hsv, upper_hsv=upper_hsv)
+
+    mask_with_circle = prepare_mask_with_circle(image, mask)
+
+    # old
+    # mask, image, mask_with_circle = filter_image2(image_normalized, color=cv2.COLOR_RGB2HSV,
+    #                                               lower_hsv=lower_hsv, upper_hsv=upper_hsv)
 
     return mask_with_circle
 
@@ -138,23 +139,25 @@ def find_speed_limit(sign_image, ref_digits_signs):
     sign_image_filtered = prepare_sign_to_digits_recognition(sign_image)
     if sign_image_filtered is None:
         return None, None
+
     width = sign_image_filtered.shape[1]
     widths = int(0.08 * width), int(0.35 * width), int(0.4 * width), int(0.6 * width)
-    digit_images_split_h = find_digit_images(sign_image_filtered, ref_digits={}, minimum_sum=int(0.2 * width),
-                                             widths=widths)
+    digit_images_split_h = find_digit_images(sign_image_filtered, minimum_sum=int(0.2 * width),
+                                             widths=widths, axis=0)
     digit_images = []
     for digit_image_h in digit_images_split_h:
         width = digit_image_h.shape[0]
         widths = int(0.2 * width), int(0.45 * width), int(0.5 * width), int(0.7 * width)
         # digit_image = find_digit_images(digit_image_h, ref_digits={}, minimum_sum=int(0.2 * width), widths=widths, axis=1)[0]
-        digit_images_split_v = find_digit_images(digit_image_h, ref_digits={}, minimum_sum=int(0.2 * width),
+        digit_images_split_v = find_digit_images(digit_image_h, minimum_sum=int(0.2 * width),
                                                  widths=widths, axis=1)
         if digit_images_split_v is not None:
             if len(digit_images_split_v) >= 1:
                 digit_image = digit_images_split_v[0]
                 if digit_image is not None:
                     digit_images.append(digit_image)
-    target_speed, result_images_list = find_speed_from_digit_images(digit_images, ref_digits=ref_digits_signs, axis=1, minimum=10)
+    target_speed, result_images_list = find_speed_from_digit_images(digit_images, ref_digits=ref_digits_signs,
+                                                                    minimum=10)
 
     return target_speed, result_images_list
 
